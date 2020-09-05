@@ -31,7 +31,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
-    host: 'localhost',
+    // host: 'localhost',
     // https: true,
     https: {
       key: 'localhost-key.pem',
