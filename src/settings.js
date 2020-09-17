@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Libary - KMA',
+  title: 'Vue Element Admin',
 
   /**
    * @type {boolean} true | false
@@ -23,7 +23,14 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: true,
+  sidebarLogo: false,
+
+  /**
+   * @type {boolean} true | false
+   * @description Whether support pinyin search in headerSearch
+   * Bundle size minified 47.3kb,minified + gzipped 63kb
+   */
+  supportPinyinSearch: true,
 
   /**
    * @type {string | array} 'production' | ['production', 'development']
