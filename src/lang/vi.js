@@ -1,9 +1,9 @@
 export default {
   route: {
     dashboard: 'Dashboard',
-    documentation: 'Documentation',
-    guide: 'Guide',
-    permission: 'Permission',
+    documentation: 'Tài liệu',
+    guide: 'Hướng dẫn',
+    permission: 'Quyền',
     pagePermission: 'Page Permission',
     rolePermission: 'Role Permission',
     directivePermission: 'Directive Permission',
@@ -19,7 +19,7 @@ export default {
     sticky: 'Sticky',
     countTo: 'Count To',
     componentMixin: 'Mixin',
-    backToTop: 'Back To Top',
+    backToTop: 'Lên đầu trang',
     dragDialog: 'Drag Dialog',
     dragSelect: 'Drag Select',
     dragKanban: 'Drag Kanban',
@@ -36,7 +36,7 @@ export default {
     'menu1-2-2': 'Menu 1-2-2',
     'menu1-3': 'Menu 1-3',
     menu2: 'Menu 2',
-    Table: 'Table',
+    Table: 'Bảng',
     dynamicTable: 'Dynamic Table',
     dragTable: 'Drag Table',
     inlineEditTable: 'Inline Edit',
@@ -67,18 +67,18 @@ export default {
   navbar: {
     dashboard: 'Dashboard',
     github: 'Github',
-    logOut: 'Log Out',
-    profile: 'Profile',
-    theme: 'Theme',
-    size: 'Global Size'
+    logOut: 'Đăng xuất',
+    profile: 'Hồ sơ cá nhân',
+    theme: 'Giao diện',
+    size: 'Kích thước trang web'
   },
   login: {
-    title: 'Login Form',
-    logIn: 'Login',
-    username: 'Username',
-    password: 'Password',
+    title: 'Form đăng nhập',
+    logIn: 'Đăng nhập',
+    username: 'Tên tài khoản',
+    password: 'Mật khẩu',
     any: 'any',
-    thirdparty: 'Or connect with',
+    thirdparty: 'Kết nối bằng công cụ khác',
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
   documentation: {
@@ -165,16 +165,76 @@ export default {
     closeOthers: 'Close Others',
     closeAll: 'Close All'
   },
-  settings: {
-    title: 'Page style setting',
-    theme: 'Theme Color',
-    tagsView: 'Open Tags-View',
-    fixedHeader: 'Fixed Header',
-    sidebarLogo: 'Sidebar Logo'
+  pagination: {
+    goto: 'Đến trang',
+    pagesize: '/trang',
+    total: 'Tổng {total}',
+    pageClassifier: ''
   },
-  required_username: 'Please enter the correct user name',
-  required_password: 'Please enter the correct password',
-  validate_password: 'The password can not be less than 6 digits',
-  register: 'Register',
-  switch_language_success: 'Switch Language Success'
+  settings: {
+    title: 'Chỉnh sửa bố cục trang',
+    theme: 'Màu sắc giao diện',
+    tagsView: 'Chế độ xem bằng tab',
+    fixedHeader: 'Cố định tiêu đề',
+    sidebarLogo: 'Hiển thị logo'
+  },
+  datepicker: {
+    now: 'Hiện tại',
+    today: 'Hôm nay',
+    cancel: 'Hủy',
+    clear: 'Xóa',
+    confirm: 'OK',
+    selectDate: 'Chọn ngày',
+    selectTime: 'Chọn giờ',
+    startDate: 'Ngày bắt đầu',
+    startTime: 'Thời gian bắt đầu',
+    endDate: 'Ngày kết thúc',
+    endTime: 'Thời gian kết thúc',
+    prevYear: 'Năm trước',
+    nextYear: 'Năm tới',
+    prevMonth: 'Tháng trước',
+    nextMonth: 'Tháng tới',
+    year: '',
+    month1: 'Tháng 1',
+    month2: 'Tháng 2',
+    month3: 'Tháng 3',
+    month4: 'Tháng 4',
+    month5: 'Tháng 5',
+    month6: 'Tháng 6',
+    month7: 'Tháng 7',
+    month8: 'Tháng 8',
+    month9: 'Tháng 9',
+    month10: 'Tháng 10',
+    month11: 'Tháng 11',
+    month12: 'Tháng 12',
+    // week: 'week',
+    weeks: {
+      sun: 'CN',
+      mon: 'T2',
+      tue: 'T3',
+      wed: 'T4',
+      thu: 'T5',
+      fri: 'T6',
+      sat: 'T7'
+    },
+    months: {
+      jan: 'Th.1',
+      feb: 'Th.2',
+      mar: 'Th.3',
+      apr: 'Th.4',
+      may: 'Th.5',
+      jun: 'Th.6',
+      jul: 'Th.7',
+      aug: 'Th.8',
+      sep: 'Th.9',
+      oct: 'Th.10',
+      nov: 'Th.11',
+      dec: 'Th.12'
+    }
+  },
+  switch_language_success: 'Đổi ngôn ngữ thành công',
+  required_username: 'Vui lòng nhập tên người dùng',
+  required_password: 'Vui lòng nhập mật khẩu',
+  validate_password: 'Mật khẩu không thể ít hơn 6 ký tự',
+  register: 'Đăng ký'
 }
