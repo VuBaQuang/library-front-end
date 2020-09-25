@@ -1,14 +1,24 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
       <div class="title-container">
         <h3 class="title">
           {{ $t('login.title') }}
         </h3>
-        <lang-select class="set-language" />
+        <!--        <lang-select class="set-language" />-->
+        <span class="set-language" style="margin-left: auto;">
+          <svg-icon
+            style="cursor: pointer;margin-right: 5px;font-size:1.23rem"
+            icon-class="flagVn"
+            @click="handleSetLanguage('vi')"
+          />
+          <svg-icon
+            style="cursor: pointer;font-size:1.23rem"
+            icon-class="flagUs"
+            @click="handleSetLanguage('en')"
+          />
+        </span>
       </div>
-
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -16,6 +26,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
+          size="small"
           :placeholder="$t('login.username')"
           name="username"
           type="text"
@@ -23,7 +34,6 @@
           autocomplete="on"
         />
       </el-form-item>
-
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
@@ -33,6 +43,7 @@
             :key="passwordType"
             ref="password"
             v-model="loginForm.password"
+            size="small"
             :type="passwordType"
             :placeholder="$t('login.password')"
             name="password"
@@ -47,66 +58,54 @@
           </span>
         </el-form-item>
       </el-tooltip>
+      <el-row :gutter="40">
+        <el-col :span="12">
+          <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+            {{ $t('login.logIn') }}
+          </el-button>
+        </el-col>
+        <el-col :span="12">
+          <el-button :loading="loading" type="success" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+            {{ $t('register') }}
+          </el-button>
+        </el-col>
+        <el-col align="center"><span class="forgot-password" style="font-size: 13px; color:#409EFF; cursor: pointer">Quên mật khẩu</span></el-col>
+      </el-row>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
-        {{ $t('login.logIn') }}
-      </el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>{{ $t('login.username') }} : admin</span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">
-            {{ $t('login.username') }} : editor
-          </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
-        </div>
-
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          {{ $t('login.thirdparty') }}
-        </el-button>
-      </div>
     </el-form>
-
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
-import SocialSign from './components/SocialSignin'
 
 export default {
   name: 'Login',
-  components: { LangSelect, SocialSign },
-  data() {
+  components: {
+
+  },
+  data: function() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error(this.$t('required_username')))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+      if (value.trim().length === 0) {
+        callback(new Error(this.$t('required_password')))
+      }
+      if (value.length < 8) {
+        callback(new Error(this.$t('validate_password')))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -146,6 +145,14 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    handleSetLanguage(lang) {
+      this.$i18n.locale = lang
+      this.$store.dispatch('app/setLanguage', lang)
+      this.$message({
+        message: this.$t('switch_language_success'),
+        type: 'success'
+      })
+    },
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -186,31 +193,15 @@ export default {
         return acc
       }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
+
   }
 }
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+.forgot-password:hover{
+  text-decoration: underline;
+}
 
 $bg:#283443;
 $light_gray:#fff;
@@ -226,7 +217,7 @@ $cursor: #fff;
 .login-container {
   .el-input {
     display: inline-block;
-    height: 47px;
+    //height: 47px;
     width: 85%;
 
     input {
@@ -235,9 +226,9 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
+      color: rgb(151, 151, 151);
+      //height: 47px;
+      caret-color:rgb(151, 151, 151);
 
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
@@ -248,17 +239,18 @@ $cursor: #fff;
 
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 5px;
     color: #454545;
+    border-radius: 10px;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
+$bg:#ffffff;
 $dark_gray:#889aa4;
-$light_gray:#eee;
+$light_gray:#black;
 
 .login-container {
   min-height: 100%;
@@ -269,7 +261,7 @@ $light_gray:#eee;
   .login-form {
     position: relative;
     width: 520px;
-    max-width: 100%;
+    max-width: 70%;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
