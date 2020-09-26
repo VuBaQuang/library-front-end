@@ -1,0 +1,17 @@
+.login-container .login-form {
+  margin-top: 160px !important;
+  padding: 50px !important;
+  width: 600px !important;
+  background-color: #ffffff;
+  border-radius: 20px;
+}
+.dialog-register .el-dialog{
+  border-radius: 20px;
+  .el-form-item{
+    margin-right: 30px;
+  }
+  .el-dialog__title{
+    font-size: 26px;
+    font-weight: bold;
+  }
+}

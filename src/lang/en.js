@@ -77,6 +77,12 @@ export default {
     logIn: 'Login',
     username: 'Username',
     password: 'Password',
+
+    email: 'Email',
+    address: 'Address',
+    confirmPassword: 'Confirm password',
+    phone: 'Phone',
+    forgetPassword: 'Forget password',
     any: 'any',
     thirdparty: 'Or connect with',
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
@@ -174,7 +180,8 @@ export default {
   },
   required_username: 'Please enter the correct user name',
   required_password: 'Please enter the correct password',
-  validate_password: 'The password can not be less than 6 digits',
+  valid_password: 'The password is invalid',
+  valid_username: 'The username không hợp lệ',
   register: 'Register',
   switch_language_success: 'Switch Language Success'
 }

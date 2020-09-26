@@ -73,9 +73,14 @@ export default {
     size: 'Kích thước trang web'
   },
   login: {
-    title: 'Form đăng nhập',
+    title: 'Đăng nhập',
     logIn: 'Đăng nhập',
+    email: 'Email',
+    address: 'Địa chỉ',
+    confirmPassword: 'Xác nhận mật khẩu',
+    phone: 'Điện thoại',
     username: 'Tên tài khoản',
+    forgetPassword: 'Quên mật khẩu',
     password: 'Mật khẩu',
     any: 'any',
     thirdparty: 'Kết nối bằng công cụ khác',
@@ -91,9 +96,9 @@ export default {
     roles: 'Your roles',
     switchRoles: 'Switch roles',
     tips: 'In some cases, using v-permission will have no effect. For example: Element-UI  el-tab or el-table-column and other scenes that dynamically render dom. You can only do this with v-if.',
-    delete: 'Delete',
-    confirm: 'Confirm',
-    cancel: 'Cancel'
+    delete: 'Xoá',
+    confirm: 'Xác nhận',
+    cancel: 'Huỷ bỏ'
   },
   guide: {
     description: 'The guide page is useful for some people who entered the project for the first time. You can briefly introduce the features of the project. Demo is based on ',
@@ -235,6 +240,7 @@ export default {
   switch_language_success: 'Đổi ngôn ngữ thành công',
   required_username: 'Vui lòng nhập tên người dùng',
   required_password: 'Vui lòng nhập mật khẩu',
-  validate_password: 'Mật khẩu không thể ít hơn 6 ký tự',
-  register: 'Đăng ký'
+  valid_password: 'Mật khẩu không hợp lệ',
+  register: 'Đăng ký',
+  valid_username: 'Tên tài khoản không hợp lệ'
 }

@@ -1,6 +1,14 @@
 <template>
+  <!--  <div>-->
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
         <h3 class="title">
           {{ $t('login.title') }}
@@ -49,7 +57,6 @@
             name="password"
             tabindex="2"
             autocomplete="on"
-            @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
@@ -60,34 +67,53 @@
       </el-tooltip>
       <el-row :gutter="40">
         <el-col :span="12">
-          <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+          <el-button
+            :loading="loading"
+            type="primary"
+            style="width:100%;margin-bottom:30px;"
+            @click.native.prevent="handleLogin"
+          >
             {{ $t('login.logIn') }}
           </el-button>
         </el-col>
         <el-col :span="12">
-          <el-button :loading="loading" type="success" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+          <el-button
+            :loading="loading"
+            type="success"
+            style="width:100%;margin-bottom:30px;"
+            @click.native.prevent="handleRegister"
+          >
             {{ $t('register') }}
           </el-button>
         </el-col>
-        <el-col align="center"><span class="forgot-password" style="font-size: 13px; color:#409EFF; cursor: pointer">Quên mật khẩu</span></el-col>
+        <el-col align="center"><span class="forgot-password" style="font-size: 13px; color:#409EFF; cursor: pointer">{{ $t('login.forgetPassword') }} ?</span>
+        </el-col>
       </el-row>
-
     </el-form>
+    <register-dialog :dialog-register-visible="dialogRegisterVisible" @handleClose="dialogRegisterVisible=$event" />
+
   </div>
+
+  <!--  </div>-->
+
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validUsername, validPassword } from '@/utils/regex'
+import RegisterDialog from '@/views/login/components/RegisterDialog'
 
 export default {
   name: 'Login',
   components: {
-
+    RegisterDialog
   },
   data: function() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (value.trim().length === 0) {
         callback(new Error(this.$t('required_username')))
+      }
+      if (!validUsername(value.trim())) {
+        callback(new Error(this.$t('valid_username')))
       } else {
         callback()
       }
@@ -96,13 +122,14 @@ export default {
       if (value.trim().length === 0) {
         callback(new Error(this.$t('required_password')))
       }
-      if (value.length < 8) {
-        callback(new Error(this.$t('validate_password')))
+      if (!validPassword(value.trim())) {
+        callback(new Error(this.$t('valid_password')))
       } else {
         callback()
       }
     }
     return {
+      dialogRegisterVisible: false,
       loginForm: {
         username: '',
         password: ''
@@ -145,6 +172,9 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    handleRegister() {
+      this.dialogRegisterVisible = true
+    },
     handleSetLanguage(lang) {
       this.$i18n.locale = lang
       this.$store.dispatch('app/setLanguage', lang)
@@ -152,10 +182,6 @@ export default {
         message: this.$t('switch_language_success'),
         type: 'success'
       })
-    },
-    checkCapslock(e) {
-      const { key } = e
-      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -199,63 +225,73 @@ export default {
 </script>
 
 <style lang="scss">
-.forgot-password:hover{
+.forgot-password:hover {
   text-decoration: underline;
 }
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
+//@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+//  .login-container .el-input input {
+//    color: $cursor;
+//  }
+//}
 
 /* reset element-ui css */
 .login-container {
-  .el-input {
-    display: inline-block;
-    //height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: rgb(151, 151, 151);
+  .login-form {
+    .el-input {
+      display: inline-block;
       //height: 47px;
-      caret-color:rgb(151, 151, 151);
+      width: 85%;
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+      input {
+        background: transparent;
+        border: 0px;
+        -webkit-appearance: none;
+        border-radius: 0px;
+        padding: 12px 5px 12px 15px;
+        color: rgb(151, 151, 151);
+        //height: 47px;
+        caret-color: rgb(151, 151, 151);
+
+        &:-webkit-autofill {
+          box-shadow: 0 0 0px 1000px $bg inset !important;
+          -webkit-text-fill-color: $cursor !important;
+        }
       }
     }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 5px;
-    color: #454545;
-    border-radius: 10px;
+    .el-form-item {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.05);
+      //border-radius: 5px;
+      color: #454545;
+      border-radius: 10px;
+    }
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#ffffff;
-$dark_gray:#889aa4;
-$light_gray:#black;
+$bg: #ffffff;
+$dark_gray: #889aa4;
+$light_gray: #black;
+@mixin background($imgpath,$position:0 0,$repeat: no-repeat) {
+  background: {
+    image: url($imgpath);
+  }
+}
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  @include background('/bg-01.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  //background-image: url("");
   overflow: hidden;
 
   .login-form {
