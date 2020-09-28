@@ -240,7 +240,12 @@ export default {
   switch_language_success: 'Đổi ngôn ngữ thành công',
   required_username: 'Vui lòng nhập tên người dùng',
   required_password: 'Vui lòng nhập mật khẩu',
+  required_email: 'Vui lòng nhập email',
   valid_password: 'Mật khẩu không hợp lệ',
+  valid_email: 'Email không hợp lệ',
+  valid_confirmPassword: 'Xác nhận mật khẩu không hợp lệ',
   register: 'Đăng ký',
+  required_phone: 'Vui lòng nhập số điện thoại',
+  valid_phone: 'Số điện thoại không hợp lệ',
   valid_username: 'Tên tài khoản không hợp lệ'
 }

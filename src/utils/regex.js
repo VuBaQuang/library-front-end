@@ -27,3 +27,7 @@ export function validEmail(email) {
   const reg = /^(?![_.])+(?!.*[_.]{2})+([\w-.]+)+(?<![_.])@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,}|[0-9]{1,3})(]?)$/
   return reg.test(email)
 }
+export function validPhone(phone) {
+  const reg = /^[0-9]+$/
+  return reg.test(phone)
+}

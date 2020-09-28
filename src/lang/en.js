@@ -180,8 +180,13 @@ export default {
   },
   required_username: 'Please enter the correct user name',
   required_password: 'Please enter the correct password',
+  required_email: 'Please enter the correct email',
+  valid_email: 'The email is invalid',
   valid_password: 'The password is invalid',
-  valid_username: 'The username không hợp lệ',
+  valid_username: 'The username is invalid',
+  valid_confirmPassword: 'The confirm password is invalid',
   register: 'Register',
+  required_phone: 'Please enter the correct phone',
+  valid_phone: 'The phone is invalid',
   switch_language_success: 'Switch Language Success'
 }

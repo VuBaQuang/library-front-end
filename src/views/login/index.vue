@@ -101,7 +101,7 @@
 <script>
 import { validUsername, validPassword } from '@/utils/regex'
 import RegisterDialog from '@/views/login/components/RegisterDialog'
-
+import axios from 'axios'
 export default {
   name: 'Login',
   components: {
@@ -196,15 +196,30 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+          const headers = {
+            'Content-Type': 'text/plain',
+            'X-XSRF-TOKEN': 'aaaaaaaaaaaaaaa'
+          }
+          axios.post(
+            'https://localhost:8443/rest/auth/login',
+            this.loginForm,
+            { headers }
+          )
+            .then(function(response) {
+              console.log(response)
             })
-            .catch(() => {
-              this.loading = false
+            .catch(function(error) {
+              console.log(error)
             })
+
+          // this.$store.dispatch('user/login', this.loginForm)
+          //   .then(() => {
+          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          //     this.loading = false
+          //   })
+          //   .catch(() => {
+          //     this.loading = false
+          //   })
         } else {
           console.log('error submit!!')
           return false
