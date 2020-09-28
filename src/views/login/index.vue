@@ -196,14 +196,10 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          const headers = {
-            'Content-Type': 'text/plain',
-            'X-XSRF-TOKEN': 'aaaaaaaaaaaaaaa'
-          }
           axios.post(
             'https://localhost:8443/rest/auth/login',
-            this.loginForm,
-            { headers }
+            this.loginForm
+
           )
             .then(function(response) {
               console.log(response)
@@ -259,7 +255,6 @@ $cursor: #fff;
   .login-form {
     .el-input {
       display: inline-block;
-      //height: 47px;
       width: 85%;
 
       input {
@@ -269,7 +264,6 @@ $cursor: #fff;
         border-radius: 0px;
         padding: 12px 5px 12px 15px;
         color: rgb(151, 151, 151);
-        //height: 47px;
         caret-color: rgb(151, 151, 151);
 
         &:-webkit-autofill {
@@ -306,7 +300,6 @@ $light_gray: #black;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  //background-image: url("");
   overflow: hidden;
 
   .login-form {

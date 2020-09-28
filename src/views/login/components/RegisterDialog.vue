@@ -18,7 +18,7 @@
         <el-input ref="password" v-model="registerForm.password" maxlength="200" type="password" prefix-icon="el-icon-unlock" :placeholder="$t('login.password')" />
       </el-form-item>
       <el-form-item prop="confirmPassword">
-        <el-input ref="password" v-model="registerForm.confirmPassword" maxlength="200" prefix-icon="el-icon-unlock" :placeholder="$t('login.confirmPassword')" />
+        <el-input ref="password" v-model="registerForm.confirmPassword" type="password" maxlength="200" prefix-icon="el-icon-unlock" :placeholder="$t('login.confirmPassword')" />
       </el-form-item>
       <el-form-item prop="phone">
         <el-input ref="phone" v-model="registerForm.phone" maxlength="15" prefix-icon="el-icon-phone" :placeholder="$t('login.phone')" @keypress.native="isNumber($event)" />
@@ -28,15 +28,16 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button type="danger" @click="centerDialogVisible = false">{{ $t('permission.cancel') }}</el-button>
-      <el-button type="primary" @click="centerDialogVisible = false">{{ $t('register') }}</el-button>
+      <el-button type="danger">{{ $t('permission.cancel') }}</el-button>
+      <el-button type="primary" @click="handleRegister()">{{ $t('register') }}</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { validPassword, validEmail, validPhone } from '@/utils/regex'
+
+import { validUsername, validPassword, validEmail, validPhone } from '@/utils/regex'
+import axios from 'axios'
 
 export default {
   name: 'RegisterDialog',
@@ -158,7 +159,17 @@ export default {
       this.$emit('handleClose', false)
     },
     handleRegister() {
+      axios.post(
+        'https://localhost:8443/rest/auth/register',
+        this.registerForm
 
+      )
+        .then(function(response) {
+          console.log(response)
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
     },
     showPwd() {
       if (this.passwordType === 'password') {
