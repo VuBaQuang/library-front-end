@@ -41,13 +41,23 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/profile',
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
+  },
+  {
+    path: '/',
     component: Layout,
-    redirect: '/profile/index',
+    redirect: '/profile',
     hidden: true,
     children: [
       {
-        path: 'index',
+        path: 'profile',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
         meta: { title: 'profile', icon: 'user', noCache: true }
@@ -61,6 +71,8 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  /** when your routing map is too long, you can split it into small modules **/
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

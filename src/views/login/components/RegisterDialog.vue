@@ -9,13 +9,13 @@
   >
     <el-form style="" label-width="30px" :model="registerForm" :rules="registerRules">
       <el-form-item prop="username">
-        <el-input ref="username" v-model="registerForm.username" maxlength="32" prefix-icon="el-icon-user-solid" :placeholder="$t('login.username')" />
+        <el-input ref="username" v-model="registerForm.username" name="username" maxlength="32" prefix-icon="el-icon-user-solid" :placeholder="$t('login.username')" />
       </el-form-item>
       <el-form-item prop="email">
         <el-input ref="email" v-model="registerForm.email" maxlength="200" prefix-icon="el-icon-message" :placeholder="$t('login.email')" />
       </el-form-item>
       <el-form-item prop="password">
-        <el-input ref="password" v-model="registerForm.password" maxlength="200" type="password" prefix-icon="el-icon-unlock" :placeholder="$t('login.password')" />
+        <el-input ref="password" v-model="registerForm.password" name="password" maxlength="200" type="password" prefix-icon="el-icon-unlock" :placeholder="$t('login.password')" />
       </el-form-item>
       <el-form-item prop="confirmPassword">
         <el-input ref="password" v-model="registerForm.confirmPassword" type="password" maxlength="200" prefix-icon="el-icon-unlock" :placeholder="$t('login.confirmPassword')" />
@@ -28,8 +28,8 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button type="danger">{{ $t('permission.cancel') }}</el-button>
       <el-button type="primary" @click="handleRegister()">{{ $t('register') }}</el-button>
+      <el-button type="danger" @click="handleClose">{{ $t('permission.cancel') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -37,6 +37,7 @@
 <script>
 
 import { validUsername, validPassword, validEmail, validPhone } from '@/utils/regex'
+// import request from '@/utils/request'
 import axios from 'axios'
 
 export default {
@@ -162,7 +163,6 @@ export default {
       axios.post(
         'https://localhost:8443/rest/auth/register',
         this.registerForm
-
       )
         .then(function(response) {
           console.log(response)

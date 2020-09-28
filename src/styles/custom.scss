@@ -15,3 +15,17 @@
     font-weight: bold;
   }
 }
+//input:-webkit-autofill{
+//  -webkit-text-fill-color:unset !important;
+//}
+#username:-webkit-autofill{
+  -webkit-text-fill-color: unset !important;
+
+  -webkit-box-shadow: 0 0 0 30px #f2f2f2 inset !important;
+}
+#password:-webkit-autofill{
+  -webkit-text-fill-color: unset !important;
+  -webkit-box-shadow: 0 0 0 30px #f2f2f2 inset !important;
+
+}
+

@@ -32,6 +32,7 @@
           <svg-icon icon-class="user" />
         </span>
         <el-input
+          id="username"
           ref="username"
           v-model="loginForm.username"
           size="small"
@@ -48,6 +49,7 @@
             <svg-icon icon-class="password" />
           </span>
           <el-input
+            id="password"
             :key="passwordType"
             ref="password"
             v-model="loginForm.password"
@@ -101,7 +103,7 @@
 <script>
 import { validUsername, validPassword } from '@/utils/regex'
 import RegisterDialog from '@/views/login/components/RegisterDialog'
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   name: 'Login',
   components: {
@@ -196,26 +198,19 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          axios.post(
-            'https://localhost:8443/rest/auth/login',
-            this.loginForm
-
-          )
-            .then(function(response) {
-              console.log(response)
+          // this.$store.dispatch('user/login', this.loginForm).then(data => {
+          //   console.log(data)
+          // }).catch(e => {
+          //   console.log(e)
+          // })
+          this.$store.dispatch('user/login', this.loginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.loading = false
             })
-            .catch(function(error) {
-              console.log(error)
+            .catch(() => {
+              this.loading = false
             })
-
-          // this.$store.dispatch('user/login', this.loginForm)
-          //   .then(() => {
-          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-          //     this.loading = false
-          //   })
-          //   .catch(() => {
-          //     this.loading = false
-          //   })
         } else {
           console.log('error submit!!')
           return false

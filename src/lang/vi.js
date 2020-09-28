@@ -65,7 +65,7 @@ export default {
     profile: 'Profile'
   },
   navbar: {
-    dashboard: 'Dashboard',
+    changePassword: 'Đổi mật khẩu',
     github: 'Github',
     logOut: 'Đăng xuất',
     profile: 'Hồ sơ cá nhân',

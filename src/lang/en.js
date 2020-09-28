@@ -65,8 +65,7 @@ export default {
     profile: 'Profile'
   },
   navbar: {
-    dashboard: 'Dashboard',
-    github: 'Github',
+    changePassword: 'Change password',
     logOut: 'Log Out',
     profile: 'Profile',
     theme: 'Theme',

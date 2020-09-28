@@ -2,23 +2,35 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: 'https://localhost:8443/rest/auth/login',
-    method: 'post',
+    url: '/auth/login',
+    method: 'POST',
     data
   })
 }
-
-export function getInfo(token) {
+export function register(data) {
   return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
+    url: '/auth/register',
+    method: 'POST',
+    data
   })
 }
-
-export function logout() {
+export function getInfo(data) {
   return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
+    url: '/auth/info',
+    method: 'POST',
+    data
   })
 }
+export function logout(data) {
+  return request({
+    url: '/auth/logout',
+    method: 'POST',
+    data
+  })
+}
+// export function logout() {
+//   return request({
+//     url: '/vue-element-admin/user/logout',
+//     method: 'post'
+//   })
+// }
