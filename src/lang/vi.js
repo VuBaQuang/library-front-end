@@ -75,6 +75,9 @@ export default {
   login: {
     title: 'Đăng nhập',
     logIn: 'Đăng nhập',
+    oldPassword: 'Mật khẩu cũ',
+    newPassword: 'Mật khẩu mới',
+    confirmNewPassword: 'Xác nhận mật khẩu mới',
     email: 'Email',
     address: 'Địa chỉ',
     confirmPassword: 'Xác nhận mật khẩu',

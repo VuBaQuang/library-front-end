@@ -25,6 +25,7 @@
 
       </el-row>
     </div>
+    <change-password :dialog-change-password-visible="dialogChangePasswordVisible" @handleClose="dialogChangePasswordVisible=$event" />
   </div>
 </template>
 
@@ -34,12 +35,13 @@ import UserCard from './components/UserCard'
 import Activity from './components/Activity'
 import Timeline from './components/Timeline'
 import Account from './components/Account'
-
+import ChangePassword from '@/views/profile/components/ChangePassword'
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
+  components: { ChangePassword, UserCard, Activity, Timeline, Account },
   data() {
     return {
+      dialogChangePasswordVisible: false,
       user: {},
       activeTab: 'activity'
     }
@@ -47,6 +49,7 @@ export default {
   computed: {
     ...mapGetters([
       'name',
+      'username',
       'avatar',
       'roles'
     ])
@@ -59,7 +62,7 @@ export default {
       this.user = {
         name: this.name,
         role: this.roles.join(' | '),
-        email: 'admin@test.com',
+        email: 'at130444@actvn.edu.vn',
         avatar: this.avatar
       }
     }

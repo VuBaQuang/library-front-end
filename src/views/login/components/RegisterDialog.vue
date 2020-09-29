@@ -165,9 +165,16 @@ export default {
         this.registerForm
       )
         .then(function(response) {
+          // this.$message.error('Mật khẩu cũ không chính xác')
+          // this.$message.success('')
+          this.$message({
+            message: 'Đăng ký tài khoản thành công',
+            type: 'success'
+          })
           console.log(response)
         })
         .catch(function(error) {
+          this.$message.success('Đăng ký tài khoản thất bại')
           console.log(error)
         })
     },

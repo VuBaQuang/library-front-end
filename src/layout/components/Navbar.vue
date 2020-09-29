@@ -31,11 +31,11 @@
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
-          <router-link to="/change-password">
-            <el-dropdown-item>
-              {{ $t('navbar.changePassword') }}
-            </el-dropdown-item>
-          </router-link>
+
+          <el-dropdown-item @click.native="changePassword">
+            {{ $t('navbar.changePassword') }}
+          </el-dropdown-item>
+
           <!--          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">-->
           <!--            <el-dropdown-item>-->
           <!--              {{ $t('navbar.github') }}-->
@@ -50,6 +50,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <change-password :dialog-change-password-visible="dialogChangePasswordVisible" @handleClose="dialogChangePasswordVisible=$event" />
   </div>
 </template>
 
@@ -62,9 +63,11 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import Search from '@/components/HeaderSearch'
+import ChangePassword from '@/views/profile/components/ChangePassword'
 
 export default {
   components: {
+    ChangePassword,
     Breadcrumb,
     Hamburger,
     ErrorLog,
@@ -72,6 +75,11 @@ export default {
     SizeSelect,
     LangSelect,
     Search
+  },
+  data() {
+    return {
+      dialogChangePasswordVisible: false
+    }
   },
   computed: {
     ...mapGetters([
@@ -81,6 +89,9 @@ export default {
     ])
   },
   methods: {
+    changePassword() {
+      this.dialogChangePasswordVisible = true
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

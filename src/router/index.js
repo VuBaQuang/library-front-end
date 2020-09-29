@@ -34,36 +34,51 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/profile',
-    hidden: true,
-    children: [
-      {
-        path: 'profile',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'profile', icon: 'user', noCache: true }
-      }
-    ]
-  }
+export const constantRoutes = [{
+  path: '/redirect',
+  component: Layout,
+  hidden: true,
+  children: [
+    {
+      path: '/redirect/:path(.*)',
+      component: () => import('@/views/redirect/index')
+    }
+  ]
+},
+{
+  path: '/login',
+  component: () => import('@/views/login/index'),
+  hidden: true
+},
+{
+  path: '/change-password',
+  component: () => import('@/views/login/index'),
+  hidden: true
+},
+{
+  path: '/404',
+  component: () => import('@/views/error-page/404'),
+  hidden: true
+},
+{
+  path: '/401',
+  component: () => import('@/views/error-page/401'),
+  hidden: true
+},
+{
+  path: '/',
+  component: Layout,
+  redirect: '/profile',
+  hidden: true,
+  children: [
+    {
+      path: 'profile',
+      component: () => import('@/views/profile/index'),
+      name: 'Profile',
+      meta: { title: 'profile', icon: 'user', noCache: true }
+    }
+  ]
+}
 ]
 
 /**

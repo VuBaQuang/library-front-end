@@ -35,21 +35,21 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if (res.message) {
-      if (res.message === 'SUCCESS') {
-        return res
-      } else {
-        Notification({
-          message: res.message || 'Gặp lỗi',
-          type: 'error',
-          duration: 2 * 1000,
-          position: 'bottom-right'
-        })
-        return Promise.reject(new Error(res.message || 'Error'))
-      }
-    } else {
-      return res
-    }
+    // if (res.message) {
+    //   if (res.message === 'SUCCESS') {
+    //     return res
+    //   } else {
+    //     Notification({
+    //       message: res.message || 'Gặp lỗi',
+    //       type: 'error',
+    //       duration: 2 * 1000,
+    //       position: 'bottom-right'
+    //     })
+    //     return Promise.reject(new Error(res.message || 'Error'))
+    //   }
+    // } else {
+    return res
+    // }
   },
   error => {
     if (error.response.status === 401) {

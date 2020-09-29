@@ -76,7 +76,9 @@ export default {
     logIn: 'Login',
     username: 'Username',
     password: 'Password',
-
+    oldPassword: 'Old password',
+    newPassword: 'New password',
+    confirmNewPassword: 'Confirm new password',
     email: 'Email',
     address: 'Address',
     confirmPassword: 'Confirm password',
