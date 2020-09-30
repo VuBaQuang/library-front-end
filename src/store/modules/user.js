@@ -3,6 +3,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 // import axios from 'axios'
 const state = {
+  user: {},
   token: getToken(),
   username: '',
   name: '',
@@ -14,6 +15,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_USER: (state, user) => {
+    state.user = user
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -37,8 +41,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       login(userInfo)
         .then(function(response) {
-          commit('SET_TOKEN', response.token)
-          setToken(response.token)
+          const { data } = response.data
+          commit('SET_USER', data)
+          commit('SET_TOKEN', data.token)
+          setToken(data.token)
           resolve(response)
         })
         .catch(function(error) {
@@ -46,17 +52,17 @@ const actions = {
         })
     })
   },
-  getInfo({ commit, state }, user) {
+  getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(user).then(response => {
+      getInfo().then(response => {
         if (!response) {
           reject('Verification failed, please Login again.')
         }
-        const { name, username } = response
+        const { data } = response.data
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         commit('SET_ROLES', ['admin'])
-        commit('SET_NAME', name)
-        commit('SET_USERNAME', username)
+        commit('SET_NAME', data.name)
+        commit('SET_USERNAME', data.username)
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -83,7 +89,6 @@ const actions = {
   changePassword({ commit, state, dispatch }, user) {
     return new Promise((resolve, reject) => {
       changePassword(user).then(data => {
-        console.log(data)
         if (data.message === 'Password invalid') {
           resolve(data)
         } else {

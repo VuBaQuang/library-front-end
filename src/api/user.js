@@ -21,11 +21,10 @@ export function changePassword(data) {
     data
   })
 }
-export function getInfo(data) {
+export function getInfo() {
   return request({
     url: '/auth/info',
-    method: 'POST',
-    data
+    method: 'POST'
   })
 }
 export function logout(data) {

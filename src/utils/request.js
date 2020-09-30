@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router, { resetRouter } from '@/router'
-import { Notification } from 'element-ui'
+import { Message } from 'element-ui'
 import { getToken, removeToken } from '@/utils/auth'
 import store from '@/store'
 
@@ -34,22 +34,24 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
-    const res = response.data
-    // if (res.message) {
-    //   if (res.message === 'SUCCESS') {
-    //     return res
-    //   } else {
-    //     Notification({
-    //       message: res.message || 'Gặp lỗi',
-    //       type: 'error',
-    //       duration: 2 * 1000,
-    //       position: 'bottom-right'
-    //     })
-    //     return Promise.reject(new Error(res.message || 'Error'))
-    //   }
-    // } else {
-    return res
-    // }
+    const res = response
+    if (res.data.status) {
+      if (res.data.status === 'SUCCESS') {
+        Message({
+          message: res.data.message,
+          type: 'success'
+        })
+        return res
+      } else {
+        Message({
+          message: res.data.message || 'Gặp lỗi',
+          type: 'error'
+        })
+        return Promise.reject(new Error(res.data.message || 'Error'))
+      }
+    } else {
+      return res
+    }
   },
   error => {
     if (error.response.status === 401) {
