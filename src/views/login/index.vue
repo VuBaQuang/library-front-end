@@ -13,7 +13,7 @@
         @click="handleSetLanguage('en')"
       />
     </span>
-    <el-col><img src="" alt=""></el-col>
+
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -21,12 +21,35 @@
       class="login-form"
       autocomplete="on"
     >
-      <div style="text-align: center" class="title-container">
-        <h3 class="title">
-          {{ $t('login.title') }}
-        </h3>
-      </div>
-      <el-form-item prop="username">
+      <el-form-item>
+        <div style="text-align: center" class="title-container">
+          <h2 v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
+            {{ $t('login.title') }}
+          </h2>
+          <h2 v-if="(isForgetPassword || confirmViaEmail)" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
+            Quên mật khẩu
+          </h2>
+          <h2 v-if="isChangePassword" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
+            Đổi mật khẩu
+          </h2>
+          <el-col><img class="avatar-container-login" src="@/assets/logo.jpg" alt=""></el-col>
+        </div>
+      </el-form-item>
+      <el-form-item v-if="confirmViaEmail" prop="codeMail">
+        <el-input
+          id="code-mail"
+          ref="codeMail"
+          v-model="loginForm.email"
+          prefix-icon="el-icon-key"
+          size="small"
+          placeholder="Mã xác nhận nhận từ mail"
+          name="codeMail"
+          type="text"
+          tabindex="1"
+          autocomplete="on"
+        />
+      </el-form-item>
+      <el-form-item v-if="(isForgetPassword && !confirmViaEmail ) ||isLogin" prop="username">
         <el-input
           id="username"
           ref="username"
@@ -40,8 +63,23 @@
           autocomplete="on"
         />
       </el-form-item>
+      <el-form-item v-if="isForgetPassword && !confirmViaEmail" prop="email">
+        <el-input
+          id="email"
+          ref="email"
+          v-model="loginForm.email"
+          prefix-icon="el-icon-message"
+          size="small"
+          placeholder="Email đã liên kết với tài khoản"
+          name="email"
+          type="text"
+          tabindex="1"
+          autocomplete="on"
+        />
+      </el-form-item>
+
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
+        <el-form-item v-if="!isForgetPassword && !confirmViaEmail" prop="password">
           <el-input
             id="password"
             :key="passwordType"
@@ -64,36 +102,95 @@
           </el-input>
         </el-form-item>
       </el-tooltip>
+
+      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+        <el-form-item v-if="isChangePassword" prop="confirmPassword">
+          <el-input ref="confirmPassword" v-model="loginForm.confirmPassword" size="small" type="password" maxlength="200" prefix-icon="el-icon-unlock" :placeholder="$t('login.confirmPassword')" />
+        </el-form-item>
+      </el-tooltip>
+
       <el-row :gutter="40">
-        <el-col :span="12">
+        <el-col v-if="isChangePassword" style="text-align: center" :span="24">
           <el-button
             :loading="loading"
             type="primary"
             size="small"
-            style="width:100%;margin-bottom:30px;"
+            style="width:50%;margin-bottom:15px;"
+            @click.native.prevent="handleForgetPassword"
+          >
+            Đổi mật khẩu
+          </el-button>
+        </el-col>
+        <el-col v-if="confirmViaEmail" :span="12">
+          <el-button
+            :loading="loading"
+            type="primary"
+            size="small"
+            style="width:100%;margin-bottom:15px;"
+            @click.native.prevent="handleForget"
+          >
+            Xác nhận
+          </el-button>
+        </el-col>
+        <el-col v-if="confirmViaEmail" :span="12">
+          <el-button
+            size="small"
+            style="width:100%;margin-bottom:15px;"
+            type="success"
+            :disabled="counting"
+            @click="sendMailAgain"
+          >
+            <countdown v-if="counting" :time="60000" @end="handleCountdownEnd">
+              <template slot-scope="props">Gửi lại mail sau {{ props.totalSeconds }}s</template>
+            </countdown>
+            <span v-else>Gửi lại mail</span>
+          </el-button>
+        </el-col>
+        <el-col v-if="isForgetPassword && !confirmViaEmail" style="text-align: center" :span="24">
+          <el-button
+            :loading="loading"
+            type="primary"
+            size="small"
+            style="width:50%;margin-bottom:15px;"
+            @click.native.prevent="handleContinueForgetPassword"
+          >
+            Tiếp tục
+          </el-button>
+        </el-col>
+        <el-col v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" :span="12">
+          <el-button
+            :loading="loading"
+            type="primary"
+            size="small"
+            style="width:100%;margin-bottom:15px;"
             @click.native.prevent="handleLogin"
           >
             {{ $t('login.logIn') }}
           </el-button>
         </el-col>
-        <el-col :span="12">
+        <el-col v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" :span="12">
           <el-button
             :loading="loading"
             type="success"
             size="small"
-            style="width:100%;margin-bottom:30px;"
+            style="width:100%;margin-bottom:15px;"
             @click.native.prevent="handleRegister"
           >
             {{ $t('register') }}
           </el-button>
         </el-col>
-        <el-col align="center"><span class="forgot-password" style="font-size: 13px; color:#409EFF; cursor: pointer">{{ $t('login.forgetPassword') }} ?</span>
+        <el-col v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" align="center" @click.native="forgetPassword"><span
+          class="forgot-password"
+          style="font-size: 13px; color:#409EFF; cursor: pointer"
+        >{{
+          $t('login.forgetPassword')
+        }} ?</span>
         </el-col>
       </el-row>
     </el-form>
 
     <register-dialog :dialog-register-visible="dialogRegisterVisible" @handleClose="dialogRegisterVisible=$event" />
-
+    <div class="footer"><p class="copyright">&copy; Copyright 2020 Vũ Bá Quang - Học viện Kỹ thuật mật mã</p></div>
   </div>
 
   <!--  </div>-->
@@ -103,7 +200,7 @@
 <script>
 import { validUsername, validPassword } from '@/utils/regex'
 import RegisterDialog from '@/views/login/components/RegisterDialog'
-// import axios from 'axios'
+
 export default {
   name: 'Login',
   components: {
@@ -131,6 +228,11 @@ export default {
       }
     }
     return {
+      isLogin: true,
+      isChangePassword: false,
+      counting: false,
+      confirmViaEmail: false,
+      isForgetPassword: false,
       dialogRegisterVisible: false,
       loginForm: {
         username: '',
@@ -174,6 +276,32 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    forgetPassword() {
+      this.isLogin = false
+      this.isForgetPassword = true
+    },
+    handleForgetPassword() {
+      this.isLogin = true
+      this.isChangePassword = false
+      this.confirmViaEmail = false
+      this.isForgetPassword = false
+    },
+    handleForget() {
+      this.isChangePassword = true
+      this.confirmViaEmail = false
+      this.isForgetPassword = false
+    },
+    sendMailAgain() {
+      this.counting = true
+    },
+    handleCountdownEnd() {
+      this.counting = false
+    },
+    handleContinueForgetPassword() {
+      this.isLogin = false
+      this.$refs['loginForm'].resetFields()
+      this.confirmViaEmail = true
+    },
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -228,6 +356,48 @@ export default {
 <style lang="scss">
 .forgot-password:hover {
   text-decoration: underline;
+}
+
+.login-container {
+  min-height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: block;
+  padding-top: 5%;
+
+  .login-form {
+    position: relative;
+    width: 520px;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 35px;
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0px 4px 16px rgba(43, 46, 53, 0.1);
+  }
+}
+
+.avatar-container-login {
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  //background-color: #333333;
+}
+
+p.copyright {
+  position: absolute;
+  width: 100%;
+  font-size: 0.7em;
+  text-align: center;
+  bottom: 0;
 }
 </style>
 

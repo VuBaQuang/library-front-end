@@ -42,7 +42,6 @@ const actions = {
       login(userInfo)
         .then(function(response) {
           const { data } = response.data
-          commit('SET_USER', data)
           commit('SET_TOKEN', data.token)
           setToken(data.token)
           resolve(response)
@@ -59,8 +58,10 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
         const { data } = response.data
+        data.roles = data.roles.split(',')
+        commit('SET_USER', data)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
-        commit('SET_ROLES', ['admin'])
+        commit('SET_ROLES', data.roles)
         commit('SET_NAME', data.name)
         commit('SET_USERNAME', data.username)
         resolve(response)

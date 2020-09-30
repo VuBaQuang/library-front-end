@@ -13,6 +13,13 @@
     font-weight: bold;
   }
 }
+.dialog-change-pass .el-dialog{
+  border-radius: 20px;
+  .el-dialog__title{
+    font-size: 26px;
+    font-weight: bold;
+  }
+}
 //input:-webkit-autofill{
 //  -webkit-text-fill-color:unset !important;
 //}

@@ -34,6 +34,7 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
+    console.log('result - api: ', response)
     const res = response
     if (res.data.status) {
       if (res.data.status === 'SUCCESS') {

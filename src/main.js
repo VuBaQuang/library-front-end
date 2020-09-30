@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
-
+import VueCountdown from '@chenfengyuan/vue-countdown'
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
@@ -19,7 +19,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
-
+Vue.component(VueCountdown.name, VueCountdown)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

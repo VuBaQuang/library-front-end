@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    class="dialog-change-pass"
     title="Đổi mật khẩu"
     :visible.sync="visibleDialog"
     width="30%"
@@ -40,8 +41,8 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleClose">Hủy</el-button>
-      <el-button type="primary" @click="handleChange">Đổi mật khẩu</el-button>
+      <el-button size="small" type="primary" @click="handleChange">Đổi mật khẩu</el-button>
+      <el-button size="small" @click="handleClose">Hủy</el-button>
     </span>
   </el-dialog>
 
@@ -111,32 +112,20 @@ export default {
   },
 
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
+
   },
   mounted() {
-    // if (this.registerForm.username === '') {
-    //   this.$refs.username.focus()
-    // } else if (this.registerForm.password === '') {
-    //   this.$refs.password.focus()
-    // }
+
   },
   destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
+
   },
 
   methods: {
     handleChange() {
       var body = { username: this.username, password: this.changePasswordForm.oldPassword, newPassword: this.changePasswordForm.newPassword }
-      this.$store.dispatch('user/changePassword', body).then((data) => {
-        // console.log(data)
-        if (data.message === 'Password invalid') {
-          this.$message.error('Mật khẩu cũ không chính xác')
-          // this.$notify.error('')
-        } else {
-          this.$router.push({ path: `/login` })
-        }
-
-        // this.loading = false
+      this.$store.dispatch('user/changePassword', body).then(() => {
+        this.$router.push({ path: `/login` })
       })
         .catch(() => {
           this.loading = false

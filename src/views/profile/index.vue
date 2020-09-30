@@ -4,7 +4,7 @@
       <el-row :gutter="20">
 
         <el-col :span="6" :xs="24">
-          <user-card :user="user" />
+          <user-card />
         </el-col>
 
         <el-col :span="18" :xs="24">
@@ -48,24 +48,21 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name',
-      'username',
-      'avatar',
-      'roles'
+      'user'
     ])
   },
   created() {
-    this.getUser()
+    // this.getUser()
   },
   methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        role: this.roles.join(' | '),
-        email: 'at130444@actvn.edu.vn',
-        avatar: this.avatar
-      }
-    }
+    // getUser() {
+    //   this.user = {
+    //     name: this.name,
+    //     role: this.roles.join(' | '),
+    //     email: 'at130444@actvn.edu.vn',
+    //     avatar: this.avatar
+    //   }
+    // }
   }
 }
 </script>

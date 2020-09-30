@@ -13,17 +13,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          name: '',
-          email: ''
-        }
-      }
-    }
+
+  },
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
   },
   methods: {
     submit() {
