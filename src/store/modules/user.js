@@ -70,6 +70,11 @@ const actions = {
       })
     })
   },
+  confirmMailChangePassword({ commit }, form) {
+    return new Promise((resolve, reject) => {
+
+    })
+  },
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       // logout(state.token).then(() => {

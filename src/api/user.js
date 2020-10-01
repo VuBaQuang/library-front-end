@@ -34,6 +34,13 @@ export function logout(data) {
     data
   })
 }
+export function confirmMailChangePassword(data) {
+  return request({
+    url: '/auth/confirm-mail-reset-password',
+    method: 'POST',
+    data
+  })
+}
 // export function logout() {
 //   return request({
 //     url: '/vue-element-admin/user/logout',

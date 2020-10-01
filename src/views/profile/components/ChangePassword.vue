@@ -6,8 +6,8 @@
     width="30%"
     :before-close="handleClose"
   >
-    <el-form style="margin-right: 20px" label-width="30px" :model="changePasswordForm" :rules="changePasswordRules">
-      <el-form-item prop="password">
+    <el-form ref="changePasswordForm" style="margin-right: 20px" label-width="30px" :model="changePasswordForm" :rules="changePasswordRules">
+      <el-form-item prop="oldPassword">
         <el-input
           ref="password"
           v-model="changePasswordForm.oldPassword"
@@ -122,6 +122,7 @@ export default {
   },
 
   methods: {
+
     handleChange() {
       var body = { username: this.username, password: this.changePasswordForm.oldPassword, newPassword: this.changePasswordForm.newPassword }
       this.$store.dispatch('user/changePassword', body).then(() => {
@@ -133,6 +134,9 @@ export default {
     },
     handleClose() {
       this.$emit('handleClose', false)
+      setTimeout(() => {
+        this.$refs['changePasswordForm'].resetFields()
+      }, 500)
     }
 
   }
