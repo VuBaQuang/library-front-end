@@ -1,4 +1,4 @@
-import { getInfo, login, changePassword, confirmUserEmail, confirmViaEmail } from '@/api/user'
+import { getInfo, login, changePassword, confirmUserEmail, confirmViaEmail, logout } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 // import axios from 'axios'
@@ -59,6 +59,7 @@ const actions = {
         }
         const { data } = response.data
         data.roles = data.roles.split(',')
+        console.log(data.roles)
         commit('SET_USER', data)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         commit('SET_ROLES', data.roles)
@@ -92,21 +93,21 @@ const actions = {
         })
     })
   },
-  logout({ commit, state, dispatch }) {
+  logout({ commit, state, dispatch }, user) {
     return new Promise((resolve, reject) => {
-      // logout(state.token).then(() => {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      removeToken()
-      resetRouter()
-      // reset visited views and cached views
-      // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-      dispatch('tagsView/delAllViews', null, { root: true })
-      // next(`/login?redirect=${to.path}`)
-      resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
+      logout(user).then(() => {
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeToken()
+        resetRouter()
+        // reset visited views and cached views
+        // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+        dispatch('tagsView/delAllViews', null, { root: true })
+        // next(`/login?redirect=${to.path}`)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
   changePassword({ commit, state, dispatch }, user) {

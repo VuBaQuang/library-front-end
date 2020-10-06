@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       dialogChangePasswordVisible: false,
-      user: {},
+      // user: {},
       activeTab: 'activity'
     }
   },
