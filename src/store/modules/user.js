@@ -1,4 +1,4 @@
-import { getInfo, login, changePassword } from '@/api/user'
+import { getInfo, login, changePassword, confirmUserEmail, confirmViaEmail } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 // import axios from 'axios'
@@ -70,9 +70,26 @@ const actions = {
       })
     })
   },
-  confirmMailChangePassword({ commit }, form) {
+  confirmViaEmail({ commit }, form) {
     return new Promise((resolve, reject) => {
-
+      confirmViaEmail(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  confirmUserEmail({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      confirmUserEmail(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
     })
   },
   logout({ commit, state, dispatch }) {

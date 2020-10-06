@@ -23,14 +23,14 @@
     >
       <el-form-item>
         <div style="text-align: center" class="title-container">
-          <h2 v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
+          <h2 v-if="isLogin" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
             {{ $t('login.title') }}
           </h2>
-          <h2 v-if="(isForgetPassword || confirmViaEmail)" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
-            Quên mật khẩu
+          <h2 v-if="confirmUserEmail || confirmViaEmail" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
+            Xác nhận thông tin
           </h2>
           <h2 v-if="isChangePassword" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
-            Đổi mật khẩu
+            Thiết lập mật khẩu mới
           </h2>
           <el-col><img class="avatar-container-login" src="@/assets/logo.jpg" alt=""></el-col>
         </div>
@@ -49,7 +49,7 @@
           autocomplete="on"
         />
       </el-form-item>
-      <el-form-item v-if="(isForgetPassword && !confirmViaEmail ) ||isLogin" prop="username">
+      <el-form-item v-if="confirmUserEmail || isLogin" prop="username">
         <el-input
           id="username"
           ref="username"
@@ -63,7 +63,7 @@
           autocomplete="on"
         />
       </el-form-item>
-      <el-form-item v-if="isForgetPassword && !confirmViaEmail" prop="email">
+      <el-form-item v-if="confirmUserEmail" prop="email">
         <el-input
           id="email"
           ref="email"
@@ -77,9 +77,8 @@
           autocomplete="on"
         />
       </el-form-item>
-
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item v-if="!isForgetPassword && !confirmViaEmail" prop="password">
+        <el-form-item v-if="isLogin || isChangePassword" prop="password">
           <el-input
             id="password"
             :key="passwordType"
@@ -102,7 +101,6 @@
           </el-input>
         </el-form-item>
       </el-tooltip>
-
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item v-if="isChangePassword" prop="confirmPassword">
           <el-input ref="confirmPassword" v-model="loginForm.confirmPassword" size="small" type="password" maxlength="200" prefix-icon="el-icon-unlock" :placeholder="$t('login.confirmPassword')" />
@@ -110,24 +108,34 @@
       </el-tooltip>
 
       <el-row :gutter="40">
-        <el-col v-if="isChangePassword" style="text-align: center" :span="24">
+        <el-col v-if="isChangePassword" style="text-align: center" :span="12">
           <el-button
-            :loading="loading"
             type="primary"
             size="small"
-            style="width:50%;margin-bottom:15px;"
-            @click.native.prevent="handleForgetPassword"
+            style="width:100%;margin-bottom:15px;"
+            @click.native.prevent="handleCreateNewPassword"
           >
-            Đổi mật khẩu
+            Thiết lập
           </el-button>
         </el-col>
+        <el-col v-if="isChangePassword" style="text-align: center" :span="12">
+          <el-button
+            type="danger"
+            size="small"
+            style="width:100%;margin-bottom:15px;"
+            @click.native.prevent="toLogin"
+          >
+            Huỷ bỏ
+          </el-button>
+        </el-col>
+        <!--        confirmViaEmail start-->
         <el-col v-if="confirmViaEmail" :span="12">
           <el-button
             :loading="loading"
             type="primary"
             size="small"
             style="width:100%;margin-bottom:15px;"
-            @click.native.prevent="handleForget"
+            @click.native.prevent="toChangePassword"
           >
             Xác nhận
           </el-button>
@@ -146,18 +154,33 @@
             <span v-else>Gửi lại mail</span>
           </el-button>
         </el-col>
-        <el-col v-if="isForgetPassword && !confirmViaEmail" style="text-align: center" :span="24">
+        <!--        confirmViaEmail end-->
+        <!--        confirmUserEmail start-->
+        <el-col v-if="confirmUserEmail" style="text-align: center" :span="12">
           <el-button
             :loading="loading"
             type="primary"
             size="small"
-            style="width:50%;margin-bottom:15px;"
-            @click.native.prevent="handleContinueForgetPassword"
+            style="width:100%;margin-bottom:15px;"
+            @click.native.prevent="toConfirmViaEmail"
           >
             Tiếp tục
           </el-button>
         </el-col>
-        <el-col v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" :span="12">
+        <el-col v-if="confirmUserEmail" style="text-align: center" :span="12">
+          <el-button
+            :loading="loading"
+            type="info"
+            size="small"
+            style="width:100%;margin-bottom:15px;"
+            @click.native.prevent="toLogin"
+          >
+            Quay lại
+          </el-button>
+        </el-col>
+        <!--        confirmUserEmail end-->
+        <!--       login start-->
+        <el-col v-if="isLogin" :span="12">
           <el-button
             :loading="loading"
             type="primary"
@@ -168,7 +191,7 @@
             {{ $t('login.logIn') }}
           </el-button>
         </el-col>
-        <el-col v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" :span="12">
+        <el-col v-if="isLogin" :span="12">
           <el-button
             :loading="loading"
             type="success"
@@ -179,13 +202,13 @@
             {{ $t('register') }}
           </el-button>
         </el-col>
-        <el-col v-if="!isForgetPassword && !confirmViaEmail && !isChangePassword" align="center" @click.native="forgetPassword"><span
+        <el-col v-if="isLogin" align="center" @click.native="toConfirmUserEmail"><span
           class="forgot-password"
           style="font-size: 13px; color:#409EFF; cursor: pointer"
         >{{
           $t('login.forgetPassword')
-        }} ?</span>
-        </el-col>
+        }} ?</span></el-col>
+        <!--       login end-->
       </el-row>
     </el-form>
 
@@ -229,10 +252,10 @@ export default {
     }
     return {
       isLogin: true,
+      confirmUserEmail: false,
+      confirmViaEmail: false,
       isChangePassword: false,
       counting: false,
-      confirmViaEmail: false,
-      isForgetPassword: false,
       dialogRegisterVisible: false,
       loginForm: {
         username: '',
@@ -276,31 +299,42 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    forgetPassword() {
-      this.isLogin = false
-      this.isForgetPassword = true
-    },
-    handleForgetPassword() {
+    toLogin() {
+      this.$refs['loginForm'].resetFields()
       this.isLogin = true
+      this.confirmUserEmail = false
       this.isChangePassword = false
       this.confirmViaEmail = false
-      this.isForgetPassword = false
     },
-    handleForget() {
+    toConfirmUserEmail() {
+      this.$refs['loginForm'].resetFields()
+      this.isLogin = false
+      this.confirmUserEmail = true
+      this.isChangePassword = false
+      this.confirmViaEmail = false
+    },
+    toConfirmViaEmail() {
+      this.$refs['loginForm'].resetFields()
+      this.isLogin = false
+      this.confirmUserEmail = false
+      this.isChangePassword = false
+      this.confirmViaEmail = true
+    },
+    toChangePassword() {
+      this.$refs['loginForm'].resetFields()
+      this.isLogin = false
+      this.confirmUserEmail = false
       this.isChangePassword = true
       this.confirmViaEmail = false
-      this.isForgetPassword = false
+    },
+    handleCreateNewPassword() {
+      console.log('Tạo mật khẩu')
     },
     sendMailAgain() {
       this.counting = true
     },
     handleCountdownEnd() {
       this.counting = false
-    },
-    handleContinueForgetPassword() {
-      this.isLogin = false
-      this.$refs['loginForm'].resetFields()
-      this.confirmViaEmail = true
     },
     checkCapslock(e) {
       const { key } = e

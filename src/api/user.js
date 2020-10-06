@@ -41,6 +41,20 @@ export function confirmMailChangePassword(data) {
     data
   })
 }
+export function confirmUserEmail(data) {
+  return request({
+    url: '/auth/confirm-user-email',
+    method: 'POST',
+    data
+  })
+}
+export function confirmViaEmail(data) {
+  return request({
+    url: '/auth/confirm-via-email',
+    method: 'POST',
+    data
+  })
+}
 // export function logout() {
 //   return request({
 //     url: '/vue-element-admin/user/logout',
