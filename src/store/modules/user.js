@@ -59,7 +59,6 @@ const actions = {
         }
         const { data } = response.data
         data.roles = data.roles.split(',')
-        console.log(data.roles)
         commit('SET_USER', data)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         commit('SET_ROLES', data.roles)
