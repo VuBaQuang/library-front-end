@@ -5,7 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
+import manageUserRouter from './modules/manage-user'
 /* Router Modules */
 
 /**
@@ -51,11 +51,6 @@ export const constantRoutes = [{
   hidden: true
 },
 {
-  path: '/change-password',
-  component: () => import('@/views/login/index'),
-  hidden: true
-},
-{
   path: '/404',
   component: () => import('@/views/error-page/404'),
   hidden: true
@@ -87,13 +82,13 @@ export const constantRoutes = [{
  */
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
-
+  manageUserRouter,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

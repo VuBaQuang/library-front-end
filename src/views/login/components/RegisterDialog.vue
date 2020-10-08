@@ -7,12 +7,18 @@
     center
     @close="handleClose"
   >
-    <el-form style="" label-width="30px" :model="registerForm" :rules="registerRules">
-      <el-form-item prop="username">
-        <el-input ref="username" v-model="registerForm.username" name="username" maxlength="32" prefix-icon="el-icon-user-solid" :placeholder="$t('login.username')" />
+    <el-form ref="registerForm" style="" label-width="30px" :model="registerForm" :rules="registerRules">
+      <el-form-item prop="username" :class="{'is-error':!isCheckName}">
+        <el-input ref="username" v-model="registerForm.username" name="username" maxlength="32" prefix-icon="el-icon-user-solid" :placeholder="$t('login.username')" @input="checkName" />
+        <div v-if="!isCheckName" class="el-form-item__error">
+          {{ error.username }}
+        </div>
       </el-form-item>
       <el-form-item prop="email">
-        <el-input ref="email" v-model="registerForm.email" maxlength="200" prefix-icon="el-icon-message" :placeholder="$t('login.email')" />
+        <el-input ref="email" v-model="registerForm.email" maxlength="200" prefix-icon="el-icon-message" :placeholder="$t('login.email')" @input="checkEmail" />
+        <div v-if="!isCheckEmail" class="el-form-item__error">
+          {{ error.email }}
+        </div>
       </el-form-item>
       <el-form-item prop="password">
         <el-input ref="password" v-model="registerForm.password" name="password" maxlength="200" type="password" prefix-icon="el-icon-unlock" :placeholder="$t('login.password')" />
@@ -37,8 +43,6 @@
 <script>
 
 import { validUsername, validPassword, validEmail, validPhone } from '@/utils/regex'
-// import request from '@/utils/request'
-import axios from 'axios'
 
 export default {
   name: 'RegisterDialog',
@@ -52,8 +56,7 @@ export default {
     const validateUsername = (rule, value, callback) => {
       if (value.trim().length === 0) {
         callback(new Error(this.$t('required_username')))
-      }
-      if (!validUsername(value.trim())) {
+      } else if (!validUsername(value.trim())) {
         callback(new Error(this.$t('valid_username')))
       } else {
         callback()
@@ -104,21 +107,30 @@ export default {
         username: '',
         password: '',
         email: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        phone: ''
       },
       registerRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
-        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
-        confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }]
+        username: [{ required: true, trigger: 'change', validator: validateUsername }],
+        password: [{ required: true, trigger: 'change', validator: validatePassword }],
+        email: [{ required: true, trigger: 'change', validator: validateEmail }],
+        phone: [{ required: true, trigger: 'change', validator: validatePhone }],
+        confirmPassword: [{ required: true, trigger: 'change', validator: validateConfirmPassword }]
+      },
+      error: {
+        username: '',
+        email: ''
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      timeoutName: null,
+      timeoutEmail: null,
+      isCheckName: true,
+      isCheckEmail: true
     }
   },
   computed: {
@@ -147,6 +159,34 @@ export default {
   },
 
   methods: {
+    checkName() {
+      clearTimeout(this.timeoutName)
+      this.timeoutName = setTimeout(() => {
+        this.$store.dispatch('user/checkExist', { username: this.registerForm.username }).then(data => {
+          if (data.data.status === 'EXIST') {
+            this.isCheckName = false
+            this.error.username = data.data.message
+          }
+          if (data.data.status === 'NOT_EXIST') { this.isCheckName = true }
+        }).catch(e => {
+          console.log(e)
+        })
+      }, 500)
+    },
+    checkEmail() {
+      clearTimeout(this.timeoutEmail)
+      this.timeoutEmail = setTimeout(() => {
+        this.$store.dispatch('user/checkExist', { email: this.registerForm.email }).then(data => {
+          if (data.data.status === 'EXIST') {
+            this.isCheckEmail = false
+            this.error.email = data.data.message
+          }
+          if (data.data.status === 'NOT_EXIST') { this.isCheckEmail = true }
+        }).catch(e => {
+          console.log(e)
+        })
+      }, 500)
+    },
     isNumber(evt) {
       evt = evt || window.event
       const charCode = evt.which || evt.keyCode
@@ -160,23 +200,15 @@ export default {
       this.$emit('handleClose', false)
     },
     handleRegister() {
-      axios.post(
-        'https://localhost:8443/rest/auth/register',
-        this.registerForm
-      )
-        .then(function(response) {
-          // this.$message.error('Mật khẩu cũ không chính xác')
-          // this.$message.success('')
-          this.$message({
-            message: 'Đăng ký tài khoản thành công',
-            type: 'success'
+      this.$refs.registerForm.validate(valid => {
+        if (valid && this.isCheckName && this.isCheckEmail) {
+          this.$store.dispatch('user/register', this.registerForm).then(() => {
+            this.$emit('handleClose', false)
+          }).catch(e => {
+            console.log(e)
           })
-          console.log(response)
-        })
-        .catch(function(error) {
-          this.$message.success('Đăng ký tài khoản thất bại')
-          console.log(error)
-        })
+        }
+      })
     },
     showPwd() {
       if (this.passwordType === 'password') {

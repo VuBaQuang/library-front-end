@@ -73,7 +73,6 @@
           placeholder="Email đã liên kết với tài khoản"
           name="email"
           type="text"
-          tabindex="1"
           autocomplete="on"
         />
       </el-form-item>
@@ -259,7 +258,8 @@ export default {
       dialogRegisterVisible: false,
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        email: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -314,11 +314,16 @@ export default {
       this.confirmViaEmail = false
     },
     toConfirmViaEmail() {
-      this.$refs['loginForm'].resetFields()
-      this.isLogin = false
-      this.confirmUserEmail = false
-      this.isChangePassword = false
-      this.confirmViaEmail = true
+      this.$store.dispatch('user/confirmUserEmail', { username: this.loginForm.username, email: this.loginForm.email }).then(data => {
+        // console.log(data)
+        // this.$refs['loginForm'].resetFields()
+        this.isLogin = false
+        this.confirmUserEmail = false
+        this.isChangePassword = false
+        this.confirmViaEmail = true
+      }).catch(e => {
+        console.log(e)
+      })
     },
     toChangePassword() {
       this.$refs['loginForm'].resetFields()
@@ -332,6 +337,11 @@ export default {
     },
     sendMailAgain() {
       this.counting = true
+      this.$store.dispatch('user/sendEmailAgain', { username: this.loginForm.username, email: this.loginForm.email }).then(data => {
+        console.log(data)
+      }).catch(e => {
+        console.log(e)
+      })
     },
     handleCountdownEnd() {
       this.counting = false

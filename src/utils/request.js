@@ -43,13 +43,15 @@ service.interceptors.response.use(
           type: 'success'
         })
         return res
-      } else {
+      }
+      if (res.data.status === 'ERROR') {
         Message({
           message: res.data.message || 'Gặp lỗi',
           type: 'error'
         })
         return Promise.reject(new Error(res.data.message || 'Error'))
       }
+      return res
     } else {
       return res
     }

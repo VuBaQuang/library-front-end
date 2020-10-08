@@ -1,4 +1,4 @@
-import { getInfo, login, changePassword, confirmUserEmail, confirmViaEmail, logout } from '@/api/user'
+import { getInfo, login, changePassword, confirmUserEmail, sendEmailAgain, logout, register, checkExist, getAll } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 // import axios from 'axios'
@@ -70,9 +70,9 @@ const actions = {
       })
     })
   },
-  confirmViaEmail({ commit }, form) {
+  sendEmailAgain({ commit }, form) {
     return new Promise((resolve, reject) => {
-      confirmViaEmail(form)
+      sendEmailAgain(form)
         .then(function(response) {
           resolve(response)
         })
@@ -84,6 +84,28 @@ const actions = {
   confirmUserEmail({ commit, state, dispatch }, form) {
     return new Promise((resolve, reject) => {
       confirmUserEmail(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  checkExist({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      checkExist(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  getAll({ commit, state, dispatch }, user) {
+    return new Promise((resolve, reject) => {
+      getAll(user)
         .then(function(response) {
           resolve(response)
         })
@@ -122,6 +144,15 @@ const actions = {
           dispatch('tagsView/delAllViews', null, { root: true })
           resolve()
         }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  register({ commit, state, dispatch }, user) {
+    return new Promise((resolve, reject) => {
+      register(user).then(data => {
+        resolve(data)
       }).catch(error => {
         reject(error)
       })

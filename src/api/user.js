@@ -14,6 +14,13 @@ export function register(data) {
     data
   })
 }
+export function checkExist(data) {
+  return request({
+    url: '/auth/check-exist',
+    method: 'POST',
+    data
+  })
+}
 export function changePassword(data) {
   return request({
     url: '/auth/change-password',
@@ -48,10 +55,17 @@ export function confirmUserEmail(data) {
     data
   })
 }
-export function confirmViaEmail(data) {
+export function sendEmailAgain(data) {
   return request({
-    url: '/auth/confirm-via-email',
+    url: '/auth/send-email-again',
     method: 'POST',
+    data
+  })
+}
+export function getAll(data) {
+  return request({
+    url: '/users/get-all',
+    method: 'post',
     data
   })
 }
