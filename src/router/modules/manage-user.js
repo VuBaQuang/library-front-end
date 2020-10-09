@@ -10,7 +10,7 @@ const manageVersionRouter = {
       path: '',
       component: () => import('@/views/manage-user/ManageUser'),
       name: 'ManageUser',
-      meta: { title: 'Quản lý người dùng', icon: 'user' }
+      meta: { title: 'Quản lý người dùng', icon: 'user', roles: ['admin'] }
     }
   ]
 }
