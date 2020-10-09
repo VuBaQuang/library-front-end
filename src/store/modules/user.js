@@ -58,7 +58,16 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
         const { data } = response.data
-        data.roles = data.roles.split(',')
+        if (data.groups == null || data.groups.length === 0) {
+          reject('Verification failed, please Login again.')
+        }
+        var roles = []
+        for (var i = 0; i < data.groups.length; i++) {
+          roles.push(data.groups[i].code)
+          if (data.groups[i].roles !== null) { roles.push.apply(data.groups[i].roles.split(',')) }
+        }
+
+        data.roles = roles
         commit('SET_USER', data)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         commit('SET_ROLES', data.roles)

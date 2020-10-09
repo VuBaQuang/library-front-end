@@ -5,7 +5,7 @@
       :data="data"
       style="width: 100%;border-top:1px solid #dfe6ec"
       size="small"
-      :max-height="485"
+      max-height="520"
       @selection-change="handleSelectionChange"
     >
       <el-table-column
@@ -31,7 +31,11 @@
         prop="email"
         label="Email"
         align="center"
-        xa
+      />
+      <el-table-column
+        prop="phone"
+        label="Số điện thoại"
+        align="center"
       />
       <el-table-column
         label="Nhóm"
@@ -43,30 +47,60 @@
           </el-tag>
         </template>
       </el-table-column>
-      <!--      <el-table-column-->
-      <!--        label="Ngày tạo"-->
-      <!--        align="center"-->
-      <!--      >-->
-      <!--        <template slot-scope="{row}">-->
-      <!--          {{ simpleDateFormat(row.releaseAt) }}-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-      <!--      />-->
-      <!--      <el-table-column-->
-      <!--        prop="size"-->
-      <!--        label="Kích cỡ"-->
-      <!--        align="center"-->
-      <!--      />-->
-      <!--      <el-table-column-->
-      <!--        v-if="isVersionManage || !isVersionManage"-->
-      <!--        prop="linkDownload"-->
-      <!--        label="Link Download"-->
-      <!--      />-->
+
+      <el-table-column
+        label="Ngày tạo"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          {{ simpleDateFormat(row.createdAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right">
+        <template slot-scope="{row}">
+          <el-button
+            type="info"
+            size="mini"
+            plain
+            icon="el-icon-info"
+            @click="viewInfo(row)"
+          >Xem</el-button>
+          <el-popover v-model="row.visible" style="margin-right: 20px" trigger="click">
+            <span slot="reference" class="el-dropdown-link">
+              <i style="cursor: pointer" class="el-icon-arrow-down el-icon--right" />
+            </span>
+            <el-row style="width: 125px">
+              <el-button
+                class="dropdown-m"
+                style="padding: 5px 0; width: 100%;text-align: left; margin: 0 ; border: unset"
+                @click.native="resetPassword(row)"
+              ><p style="margin: 0;padding: 0; padding-left: 10px; "> Đặt lại mật khẩu</p></el-button>
+              <el-button
+                class="dropdown-m"
+                style="padding: 5px 0; width: 100%;text-align: left; margin: 0;  border: unset"
+                @click.native="lockUser(row)"
+              ><p style="margin:  0;padding: 0; padding-left: 10px;"> Khoá tài khoản </p></el-button>
+              <el-button
+                class="dropdown-m"
+                style="padding: 5px 0; width: 100%;text-align: left; margin: 0;  border: unset"
+                @click.native="unlockUser(row)"
+              ><p style="margin:  0;padding: 0; padding-left: 10px;"> Mở khoá tài khoản </p></el-button>
+              <el-button
+                class="dropdown-m"
+                style="padding: 5px 0; width: 100%;text-align: left;  margin: 0; border: unset"
+                @click.native="deleteUser(row)"
+              ><p style="margin:  0;padding: 0; padding-left: 10px;"> Xóa </p></el-button>
+            </el-row>
+
+          </el-popover>
+        </template>
+      </el-table-column>
     </el-table>
 
   </div>
 </template>
 <script>
+import { parseVNTime } from '@/utils'
 export default {
   props: {
     data: {
@@ -83,14 +117,13 @@ export default {
     indexMethod(index) {
       return this.startIndex + index + 1
     },
-    // simpleDateFormat(time) {
-    //   time = parseInt(time)
-    //   if ((typeof time) === 'number' || (typeof time) === 'string') {
-    //     return parseVNTime(new Date(time), '{d}/{m}/{Y}').toString()
-    //   }
-    // },
+    simpleDateFormat(time) {
+      if ((typeof time) === 'number' || (typeof time) === 'string') {
+        return parseVNTime(new Date(time), '{d}/{m}/{Y}').toString()
+      }
+    },
     handleSelectionChange(val) {
-      this.$emit('handlerSelect', val)
+      this.$emit('handlerSelectUser', val)
     }
   }
 }

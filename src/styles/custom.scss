@@ -25,7 +25,6 @@
 //}
 #username:-webkit-autofill{
   -webkit-text-fill-color: unset !important;
-
   -webkit-box-shadow: 0 0 0 30px #f2f2f2 inset !important;
 }
 #password:-webkit-autofill{
@@ -36,3 +35,11 @@
 .el-dialog__header {
   text-align: center;
 }
+//.popover-filter-by-group {
+//  left: 170px !important;
+//  right: unset !important;
+//}
+//
+//.popover-filter-by-group .popper__arrow {
+//  right: 120px !important;
+//}
