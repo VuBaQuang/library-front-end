@@ -3,9 +3,9 @@
     <el-table
       class="table-list-version"
       :data="data"
-      style="width: 100%;border-top:1px solid #dfe6ec"
-      size="small"
-      max-height="520"
+      style="width: 100%;border-top:1px solid #dfe6ec;"
+      max-height="540px"
+      :row-class-name="rowClassName"
       @selection-change="handleSelectionChange"
     >
       <el-table-column
@@ -19,44 +19,66 @@
         :index="indexMethod"
       />
       <el-table-column
+        align="center"
+        prop="name"
+        min-width="200px"
+        label="Họ và tên"
+      />
+      <el-table-column
+        align="center"
         prop="username"
+        min-width="200px"
         label="Tên tài khoản"
       />
       <el-table-column
-        prop="name"
-        label="Họ và tên"
-        align="center"
-      />
-      <el-table-column
+        width="200px"
         prop="email"
         label="Email"
         align="center"
       />
       <el-table-column
         prop="phone"
+        min-width="200px"
         label="Số điện thoại"
         align="center"
       />
       <el-table-column
         label="Nhóm"
+        min-width="300px"
         align="center"
       >
         <template slot-scope="{row}">
-          <el-tag class="mb-1 mr-1" type="success" size="small">
-            {{ row.roles }}
+          <el-tag v-for="group in row.groups" :key="group.id +'groupTable'" style="margin: 5px 5px" type="success" size="small">
+            {{ group.name }}
           </el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column
+        prop="address"
+        label="Địa chỉ"
+        min-width="200px"
+        align="center"
+      />
       <el-table-column
         label="Ngày tạo"
         align="center"
+        min-width="100px"
       >
         <template slot-scope="{row}">
           {{ simpleDateFormat(row.createdAt) }}
         </template>
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column
+        label="Trạng thái"
+        align="center"
+        width="100px"
+      >
+        <template slot-scope="{row}">
+          <i v-if="row.isLock!==1" class="el-icon-lock" style="color: red" />
+          <i v-if="row.isLock===1" class="el-icon-unlock" style="color: green" />
+        </template>
+      </el-table-column>
+      <el-table-column width="100px" fixed="right" align="right">
         <template slot-scope="{row}">
           <el-button
             type="info"
@@ -65,34 +87,6 @@
             icon="el-icon-info"
             @click="viewInfo(row)"
           >Xem</el-button>
-          <el-popover v-model="row.visible" style="margin-right: 20px" trigger="click">
-            <span slot="reference" class="el-dropdown-link">
-              <i style="cursor: pointer" class="el-icon-arrow-down el-icon--right" />
-            </span>
-            <el-row style="width: 125px">
-              <el-button
-                class="dropdown-m"
-                style="padding: 5px 0; width: 100%;text-align: left; margin: 0 ; border: unset"
-                @click.native="resetPassword(row)"
-              ><p style="margin: 0;padding: 0; padding-left: 10px; "> Đặt lại mật khẩu</p></el-button>
-              <el-button
-                class="dropdown-m"
-                style="padding: 5px 0; width: 100%;text-align: left; margin: 0;  border: unset"
-                @click.native="lockUser(row)"
-              ><p style="margin:  0;padding: 0; padding-left: 10px;"> Khoá tài khoản </p></el-button>
-              <el-button
-                class="dropdown-m"
-                style="padding: 5px 0; width: 100%;text-align: left; margin: 0;  border: unset"
-                @click.native="unlockUser(row)"
-              ><p style="margin:  0;padding: 0; padding-left: 10px;"> Mở khoá tài khoản </p></el-button>
-              <el-button
-                class="dropdown-m"
-                style="padding: 5px 0; width: 100%;text-align: left;  margin: 0; border: unset"
-                @click.native="deleteUser(row)"
-              ><p style="margin:  0;padding: 0; padding-left: 10px;"> Xóa </p></el-button>
-            </el-row>
-
-          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -114,6 +108,11 @@ export default {
     }
   },
   methods: {
+    rowClassName({ row, rowIndex }) {
+      if (row.isLock !== 1) {
+        return 'user-is-block'
+      }
+    },
     indexMethod(index) {
       return this.startIndex + index + 1
     },
@@ -129,4 +128,5 @@ export default {
 }
 </script>
 <style scoped>
+
 </style>

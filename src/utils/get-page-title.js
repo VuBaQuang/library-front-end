@@ -8,6 +8,8 @@ export default function getPageTitle(key) {
   if (hasKey) {
     const pageName = i18n.t(`route.${key}`)
     return `${pageName} - ${title}`
+  } else {
+    return `${key} - ${title}`
   }
-  return `${title}`
+  // return `${title}`
 }

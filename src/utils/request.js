@@ -1,7 +1,7 @@
 import axios from 'axios'
 import router, { resetRouter } from '@/router'
 import { Message } from 'element-ui'
-import { getToken, removeToken } from '@/utils/auth'
+import { getToken, removeToken, getAuth } from '@/utils/auth'
 import store from '@/store'
 
 // create an axios instance
@@ -19,8 +19,12 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    // debugger
     let token = getToken()
+    let auth = getAuth()
     if (!token) token = ''
+    if (!auth) auth = ''
+    // config.headers['Auth-User-Name'] = getCookieAccountName() || ''
     config.headers['Authorization'] = 'Basic ' + token
     config.headers['Access-Control-Allow-Origin'] = process.env.VUE_APP_CORS_URL
     return config
@@ -34,7 +38,6 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
-    console.log('result - api: ', response)
     const res = response
     if (res.data.status) {
       if (res.data.status === 'SUCCESS') {
@@ -49,7 +52,7 @@ service.interceptors.response.use(
           message: res.data.message || 'Gặp lỗi',
           type: 'error'
         })
-        return Promise.reject(new Error(res.data.message || 'Error'))
+        return Promise.reject(new Error('Error'))
       }
       return res
     } else {
@@ -58,27 +61,24 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response.status === 401) {
-      // removeAllToken()
-      // store.state.user.token = ''
-      // router.push('/login')
-      removeToken() // must remove  token  first
-      resetRouter()
-      store.commit('user/RESET_STATE')
-      router.push('/login')
-      // Notification({
-      //   message: this.$t('login.sessionHasExpired'),
-      //   type: 'error',
-      //   duration: 2 * 1000,
-      //   position: 'bottom-right'
-      // })
+      if (getToken()) {
+        Message.error('Lỗi xác thực')
+        store.dispatch('user/logout', {}).then(data => {
+          store.commit('user/RESET_STATE')
+          removeToken()
+          resetRouter()
+          router.push('/login')
+        }).catch(e => {
+          console.log(e)
+        })
+      } else {
+        Message.error('Có lỗi')
+        store.commit('user/RESET_STATE')
+        // removeToken()
+        resetRouter()
+        router.push('/login')
+      }
     }
-    // console.log('response with error: ', error)
-    Notification({
-      message: this.$t('login.sessionHasExpired') || 'Gặp lỗi',
-      type: 'error',
-      duration: 2 * 1000,
-      position: 'bottom-right'
-    })
     return Promise.reject(error)
   }
 )

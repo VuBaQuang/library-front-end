@@ -50,7 +50,8 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    meta: { title: 'Login' }
   },
   {
     path: '/404',
@@ -72,7 +73,7 @@ export const constantRoutes = [
         path: 'profile',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'profile', icon: 'user', roles: ['admin'] }
+        meta: { title: 'profile', icon: 'user' }
       }
     ]
   }

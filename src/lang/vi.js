@@ -1,5 +1,6 @@
 export default {
   route: {
+    manage_user: 'Quản lý người dùng',
     dashboard: 'Dashboard',
     documentation: 'Tài liệu',
     guide: 'Hướng dẫn',

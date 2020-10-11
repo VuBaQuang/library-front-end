@@ -2,35 +2,24 @@
 
   <div class="manage-user" style="padding-left: 50px;padding-right: 50px">
     <el-col><h1>Quản lý người dùng</h1></el-col>
-    <el-col><el-divider class="my-4" /></el-col>
+    <el-col>
+      <el-divider class="my-4" />
+    </el-col>
     <el-col>
       <el-col style="" :span="24">
         <el-form ref="form" :model="form" :rules="rulesForm">
-          <el-col style="margin-top: 10px" :span="2">
-            <filter-by-group />
+          <el-col style="margin-top: 10px; max-width: 135px; margin-right: 30px">
+            <filter-by-group @filterByGroup="filterByGroup" />
           </el-col>
-          <el-col v-if="usersSelected.length>0" style="width: 80px; margin-left: 30px" :span="2">
-            <el-button
-              plain
-              type="danger"
-              size="small"
-              icon="el-icon-delete"
-              @click="deleteUsers()"
-            >Xóa
-            </el-button>
+          <el-col v-if="usersSelected.length>0" style="margin-top: 10px; max-width: 85px; margin-right: 10px">
+            <action-user-table :users-selected="usersSelected" :show-popover="false" />
           </el-col>
-
-          <el-col v-if="!loadingTableUser" style="float: right; margin-right: 10px; max-width: 91px" :span="2">
-            <el-button
-              plain
-              type="success"
-              size="small"
-              icon="el-icon-refresh"
-              @click="handleRefresh()"
-            >Refresh
-            </el-button>
-
-          </el-col><el-col v-if="!loadingTableUser" style="float: right; margin-right: 10px; max-width: 100px" :span="2">
+          <el-col v-if="isFilter || valueOfFilterByGroup.length>0" style="float: right; margin-top: 10px; max-width: 15px" :span="1">
+            <el-tooltip class="item" effect="dark" content="Xóa lọc" placement="top">
+              <i style="color: red" class="el-icon-close pointer" @click="clearFilter" />
+            </el-tooltip>
+          </el-col>
+          <el-col v-if="!loadingTableUser" style="float: right; margin-right: 10px; max-width: 100px" :span="2">
             <el-button
               plain
               type="primary"
@@ -40,10 +29,17 @@
             >Tìm kiếm
             </el-button>
           </el-col>
-
           <el-col v-if="!loadingTableUser" style="float: right; margin-right: 10px" :span="6">
             <el-form-item style="padding: 0; margin: -2px 0 0;" prop="inputSearchVersion">
-              <el-input ref="inputSearchVersion" v-model="form.inputSearchUser" prefix-icon="el-icon-search" size="small" maxlength="100" placeholder="Tìm kiếm người dùng" @keyup.native.enter="handleSearch()" />
+              <el-input
+                ref="inputSearchVersion"
+                v-model="form.inputSearchUser"
+                prefix-icon="el-icon-search"
+                size="small"
+                maxlength="100"
+                placeholder="Tìm kiếm người dùng"
+                @keyup.native.enter="handleSearch()"
+              />
             </el-form-item>
           </el-col>
         </el-form>
@@ -73,10 +69,13 @@
 <script>
 import UserTable from '@/views/manage-user/components/UserTable'
 // import GroupIsFilter from '@/views/manage-user/components/GroupIsFilter'
+import ActionUserTable from '@/views/manage-user/components/ActionUserTable'
 import FilterByGroup from '@/views/manage-user/components/FilterByGroup'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'ManageVersion',
-  components: { FilterByGroup, UserTable },
+  components: { ActionUserTable, FilterByGroup, UserTable },
   data() {
     const validateVietnamese = (rule, value, callback) => {
       var regex = new RegExp('^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưạả ấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốýồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$')
@@ -99,6 +98,7 @@ export default {
           { validator: validateVietnamese, trigger: 'change' }]
       },
       usersSelected: [],
+      isFilter: false,
       loadingTableUser: false,
       dataUsers: [],
       totalPagination: 0,
@@ -107,11 +107,26 @@ export default {
       page: 1
     }
   },
-
+  computed: {
+    ...mapGetters([
+      'valueOfFilterByGroup'
+    ])
+  },
   created() {
     this.getAllUser()
   },
+
   methods: {
+    clearFilter() {
+      this.form.inputSearchUser = ''
+      this.isFilter = false
+      this.$store.dispatch('group/setValueOfFilterByGroup', []).then(() => {
+        this.getAllUser()
+      })
+    },
+    filterByGroup(groups) {
+      this.getAllUser(groups)
+    },
     deleteUsers() {
 
     },
@@ -119,28 +134,33 @@ export default {
 
     },
     handleSearch() {
-
+      this.isFilter = true
+      this.page = 1
+      this.pageSize = 10
+      this.getAllUser()
     },
     handleSizeChange() {
-
+      this.getAllUser()
     },
     handleCurrentChange() {
-
+      this.getAllUser()
     },
-    getAllUser() {
-      this.$store.dispatch('user/getAll', { page: 1, pageSize: 10 }).then(data => {
-        console.log(data)
+    getAllUser(groups) {
+      this.$store.dispatch('user/getAll', {
+        page: this.page,
+        pageSize: this.pageSize,
+        name: this.form.inputSearchUser,
+        username: this.form.inputSearchUser,
+        email: this.form.inputSearchUser,
+        phone: this.form.inputSearchUser,
+        groups: groups
+      }).then(data => {
         this.dataUsers = data.data.data.content
+        this.totalPagination = parseInt(data.data.data.totalElements)
       }).catch(e => {
         console.log(e)
       })
     }
-    // handleSizeChange(val) {
-    //   console.log(`${val} items per page`)
-    // },
-    // handleCurrentChange(val) {
-    //   console.log(`current page: ${val}`)
-    // }
   }
 }
 </script>
@@ -148,10 +168,11 @@ export default {
 /*.manage-group{*/
 /*  margin:0 50px*/
 /*}*/
-.button-add-group{
+.button-add-group {
   float: right
 }
-.pagination-group{
+
+.pagination-group {
   margin-top: 20px;
 }
 </style>

@@ -2,17 +2,23 @@ import { getInfo, login, changePassword, confirmUserEmail, sendEmailAgain, logou
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 // import axios from 'axios'
-const state = {
-  user: {},
-  token: getToken(),
-  username: '',
-  name: '',
-  avatar: '',
-  introduction: '',
-  roles: []
+const getDefaultState = () => {
+  return {
+    user: {},
+    token: getToken() || '',
+    username: '',
+    name: '',
+    avatar: '',
+    introduction: '',
+    roles: []
+  }
 }
+const state = getDefaultState()
 
 const mutations = {
+  RESET_STATE: (state) => {
+    Object.assign(state, getDefaultState())
+  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
@@ -43,7 +49,6 @@ const actions = {
         .then(function(response) {
           const { data } = response.data
           commit('SET_TOKEN', data.token)
-          setToken(data.token)
           resolve(response)
         })
         .catch(function(error) {
@@ -66,7 +71,6 @@ const actions = {
           roles.push(data.groups[i].code)
           if (data.groups[i].roles !== null) { roles.push.apply(data.groups[i].roles.split(',')) }
         }
-
         data.roles = roles
         commit('SET_USER', data)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
@@ -178,14 +182,10 @@ const actions = {
 
   async changeRoles({ commit, dispatch }, role) {
     const token = role + '-token'
-
     commit('SET_TOKEN', token)
     setToken(token)
-
     const { roles } = await dispatch('getInfo')
-
     resetRouter()
-
     // generate accessible routes map based on roles
     const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
     // dynamically add accessible routes
