@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <el-popover trigger="click" placement="right-start" popper-class="action-user">
@@ -31,7 +30,6 @@
               prefix-icon="el-icon-search"
               :placeholder="'Tìm nhóm'"
               size="small"
-              style="margin-bottom: 20px;"
               @input="actionSearchGroup"
             />
             <!--            <label v-if="!(groups ==null || groups.length === 0)" style="margin-top: 10px" class="">Chọn nhóm:</label>-->
@@ -41,17 +39,21 @@
                 style="text-align: center; font-size: 12px; font-style: italic"
               >Không có dữ liệu</label>
             </el-col>
-            <ul style="margin-top: 5px;" class="group-list" @scroll="scrollGroupList">
+            <ul style="margin-top: 5px;" class="group-list-action" @scroll="scrollGroupList">
               <li
-                v-for="(group) in groups"
+                v-for="(group,index) in groups"
                 :key="group.id + 'search-group-list'"
                 style="margin-top: 5px; margin-bottom: 5px"
-                @click="joinOrLeaveGroup(group)"
+                :class="{'is-at-least-one':isExistOne(group),'is-all':isExistAll(group), 'is-delete':isDelete(group)}"
+                @mouseover="mouseOver(index)"
+                @mouseleave="mouseLeave(index)"
+                @click="isDelete(group) ? leaveGroup(group) : isExistAll(group) ? joinGroup(group) : null"
               >
-                <!--                :class="{'is-at-least-one':isAtLeastOne(group),'is-all':isAll(group)}"-->
+
                 <span>{{ group.name }}</span>
-                <!--                <i v-if="isAll(group)" style="float: right" class="el-icon-check" />-->
-                <!--                <i v-if="isAtLeastOne(group)" style="float: right" class="el-icon-minus" />-->
+                <i v-if="isExistAll(group)" style="float: right" class="el-icon-check" />
+                <i v-if="isExistOne(group)" style="float: right" class="el-icon-minus" />
+                <i v-if="isDelete(group)" style="float: right" class="el-icon-circle-close" />
               </li>
             </ul>
           </el-popover>
@@ -101,6 +103,7 @@ export default {
   },
   data() {
     return {
+      hover: false,
       groupSearchInput: '',
       hidePopoverGroup: false,
       groupSearch: '',
@@ -111,11 +114,49 @@ export default {
       timeoutSeachGroup: null
     }
   },
-  computed: {
-
-  },
+  computed: {},
   methods: {
-    joinOrLeaveGroup() {
+    isExistAll(group) {
+      return (this.isAll(group) && !group.hover && this.isAll(group)) || (group.hover && this.isAtLeastOne(group)) || (group.hover && !this.isAll(group))
+    },
+    isExistOne(group) {
+      return this.isAtLeastOne(group) && !(group.hover && this.isAtLeastOne(group))
+    },
+    isDelete(group) {
+      return group.hover && this.isAll(group)
+    },
+    mouseOver(index) {
+      this.groups[index].hover = true
+      this.groups = JSON.parse(JSON.stringify(this.groups))
+    },
+    mouseLeave(index) {
+      this.groups[index].hover = false
+      this.groups = JSON.parse(JSON.stringify(this.groups))
+    },
+    isAtLeastOne(group) {
+      var count = this.countGroupAppearedInUsers(group)
+      return parseInt(count) > 0 && parseInt(count) < parseInt(this.usersSelected.length)
+    },
+    isAll(group) {
+      var count = this.countGroupAppearedInUsers(group)
+      return parseInt(count) === parseInt(this.usersSelected.length)
+    },
+    countGroupAppearedInUsers(group) {
+      var count = 0
+      for (var i = 0; i < this.usersSelected.length; i++) {
+        if (this.usersSelected[i].groups !== null && this.usersSelected[i].groups !== undefined) {
+          var check = this.usersSelected[i].groups.filter(g => parseInt(g.id) === parseInt(group.id))
+          if (check.length > 0) {
+            count++
+          }
+        }
+      }
+      return count
+    },
+    joinGroup(group) {
+
+    },
+    leaveGroup(group) {
 
     },
     resetPassword() {

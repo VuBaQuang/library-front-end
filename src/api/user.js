@@ -69,6 +69,13 @@ export function getAll(data) {
     data
   })
 }
+export function saveOrUpdate(data) {
+  return request({
+    url: '/users',
+    method: 'post',
+    data
+  })
+}
 // export function logout() {
 //   return request({
 //     url: '/vue-element-admin/user/logout',

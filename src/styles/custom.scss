@@ -75,10 +75,50 @@
     color: #67C23A !important;
   }
 }
+
+
+.group-list-action {
+  list-style-type: none;
+  padding-inline-start: 0;
+  overflow-y: auto;
+  max-height: 150px;
+}
+
+.group-list-action li {
+  padding: 0.25rem 1rem;
+  //@extend .m-0;
+  color: #606266;
+  font-size: 14px;
+  height: 28px;
+  border: solid 1px white;
+}
+
+
 .click-hight-light {
   color: #409EFF !important;
   background-color: #ecf5ff  !important;
 }
 .user-is-block{
   color: red;
+}
+.is-all{
+  background: #f0f9eb;
+  border: solid 1px #e1f3d8 !important;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #67C23A !important;
+}
+.is-at-least-one {
+  background: #74bcff0a;
+  border: solid 1px #74bcff2e !important;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #46a6ff !important;
+}
+.is-delete {
+  background: #ff494926;
+  border: solid 1px #ff494987 !important;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #ff4949fc !important;
 }
