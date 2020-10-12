@@ -43,15 +43,6 @@
 .el-dialog__header {
   text-align: center;
 }
-
-//.action-user {
-//  left: unset !important;
-//  right: 50px !important;
-//}
-//
-//.action-user .popper__arrow {
-//  left: 120px !important;
-//}
 .group-list {
   list-style-type: none;
   padding-inline-start: 0;
@@ -61,7 +52,6 @@
 
 .group-list li {
   padding: 0.25rem 1rem;
-  //@extend .m-0;
   color: #606266;
   font-size: 14px;
   height: 28px;
@@ -75,7 +65,6 @@
     color: #67C23A !important;
   }
 }
-
 
 .group-list-action {
   list-style-type: none;

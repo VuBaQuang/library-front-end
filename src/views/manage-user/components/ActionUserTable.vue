@@ -61,22 +61,22 @@
         <el-button
           class="dropdown-m"
           style="padding: 7px 0; width: 100%;text-align: left; margin: 0 ; border: unset"
-          @click.native="resetPassword(row)"
+          @click.native="resetPassword()"
         ><p style="margin: 0;padding: 0; padding-left: 10px; "> Đặt lại mật khẩu</p></el-button>
         <el-button
           class="dropdown-m"
           style="padding: 7px 0; width: 100%;text-align: left; margin: 0;  border: unset"
-          @click.native="lockUser(row)"
-        ><p style="margin:  0;padding: 0; padding-left: 10px;"> Khoá tài khoản </p></el-button>
+          @click.native="lockUser()"
+        ><p style="margin:  0;padding: 0; padding-left: 10px;"> Khóa tài khoản </p></el-button>
         <el-button
           class="dropdown-m"
           style="padding: 7px 0; width: 100%;text-align: left; margin: 0;  border: unset"
-          @click.native="unlockUser(row)"
-        ><p style="margin:  0;padding: 0; padding-left: 10px;"> Mở khoá tài khoản </p></el-button>
+          @click.native="unlockUser()"
+        ><p style="margin:  0;padding: 0; padding-left: 10px;"> Mở khóa tài khoản </p></el-button>
         <el-button
           class="dropdown-m"
           style="padding: 7px 0; width: 100%;text-align: left;  margin: 0; border: unset"
-          @click.native="deleteUser(row)"
+          @click.native="deleteUser()"
         ><p style="margin:  0;padding: 0; padding-left: 10px;"> Xóa </p></el-button>
       </el-row>
     </el-popover>
@@ -154,22 +154,40 @@ export default {
       return count
     },
     joinGroup(group) {
-
+      this.saveOrUpdate({ userIds: this.convertObjectsToIds(this.usersSelected), group: group, isJoinGroup: true })
     },
     leaveGroup(group) {
-
+      this.saveOrUpdate({ userIds: this.convertObjectsToIds(this.usersSelected), group: group, isLeaveGroup: true })
     },
+    convertObjectsToIds(listObject) {
+      var result = []
+      for (var i = 0; i < listObject.length; i++) {
+        result.push(listObject[i].id)
+      }
+      return result
+    },
+    saveOrUpdate(body) {
+      this.$store.dispatch('user/saveOrUpdate', body).then(data => {
+        this.$emit('resetListUser', null)
+        console.log(data)
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+
     resetPassword() {
 
     },
     unlockUser() {
-
+      this.saveOrUpdate({ userIds: this.convertObjectsToIds(this.usersSelected), isUnLockUsers: true })
     },
     deleteUser() {
+      this.$store.dispatch('user/deletes', this.convertObjectsToIds(this.usersSelected)).then(data => {
 
+      })
     },
     lockUser() {
-
+      this.saveOrUpdate({ userIds: this.convertObjectsToIds(this.usersSelected), isLockUsers: true })
     },
 
     actionSearchGroup() {

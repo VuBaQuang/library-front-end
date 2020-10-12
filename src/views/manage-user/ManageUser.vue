@@ -8,11 +8,11 @@
     <el-col>
       <el-col style="" :span="24">
         <el-form ref="form" :model="form" :rules="rulesForm">
-          <el-col style="margin-top: 10px; max-width: 135px; margin-right: 30px">
+          <el-col v-if="!usersSelected.length>0" style="margin-top: 10px; max-width: 135px; margin-right: 30px">
             <filter-by-group @filterByGroup="filterByGroup" />
           </el-col>
           <el-col v-if="usersSelected.length>0" style="margin-top: 10px; max-width: 85px; margin-right: 10px">
-            <action-user-table :users-selected="usersSelected" :show-popover="false" />
+            <action-user-table :users-selected="usersSelected" :show-popover="false" @resetListUser="filterByGroup" />
           </el-col>
           <el-col v-if="isFilter || valueOfFilterByGroup.length>0" style="float: right; margin-top: 10px; max-width: 15px" :span="1">
             <el-tooltip class="item" effect="dark" content="Xóa lọc" placement="top">
