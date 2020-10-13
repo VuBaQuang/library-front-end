@@ -76,6 +76,13 @@ export function saveOrUpdate(data) {
     data
   })
 }
+export function deletes(data) {
+  return request({
+    url: '/users/deletes',
+    method: 'post',
+    data
+  })
+}
 // export function logout() {
 //   return request({
 //     url: '/vue-element-admin/user/logout',

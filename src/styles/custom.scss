@@ -111,3 +111,20 @@
   cursor: pointer;
   color: #ff4949fc !important;
 }
+.app-main {
+  min-height: calc(100vh - 50px);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding-left: 2rem;
+  padding-right: 3rem;
+}
+.table-list-group .is-right .cell {
+  padding-right: 0;
+}
+
+.table-list-version, .table-list-group {
+  .is-left .cell {
+    padding-left: 10px;
+  }
+}

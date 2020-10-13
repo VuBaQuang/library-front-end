@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-width: 120px;max-width: 120px; margin-left: 1em !important;" class="justify-end-align-center">
     <el-popover trigger="click" placement="right-start" popper-class="action-user">
       <div slot="reference" class="mr-3" style=" color: #1890ff; cursor: pointer">
         Thao tác<i class="el-icon-arrow-down el-icon--right" />
@@ -8,6 +8,7 @@
         <div class="justify-end-align-center">
           <el-popover
             v-model="hidePopoverGroup"
+            v-permission="['admin', 'group_manage']"
             trigger="click"
             width="300px"
             placement="right-start"
@@ -58,11 +59,11 @@
             </ul>
           </el-popover>
         </div>
-        <el-button
-          class="dropdown-m"
-          style="padding: 7px 0; width: 100%;text-align: left; margin: 0 ; border: unset"
-          @click.native="resetPassword()"
-        ><p style="margin: 0;padding: 0; padding-left: 10px; "> Đặt lại mật khẩu</p></el-button>
+        <!--        <el-button-->
+        <!--          class="dropdown-m"-->
+        <!--          style="padding: 7px 0; width: 100%;text-align: left; margin: 0 ; border: unset"-->
+        <!--          @click.native="resetPassword()"-->
+        <!--        ><p style="margin: 0;padding: 0; padding-left: 10px; "> Đặt lại mật khẩu</p></el-button>-->
         <el-button
           class="dropdown-m"
           style="padding: 7px 0; width: 100%;text-align: left; margin: 0;  border: unset"
@@ -85,8 +86,9 @@
 </template>
 
 <script>
-
+import permission from '@/directive/permission/index.js'
 export default {
+  directives: { permission },
   props: {
     showPopover: {
       required: false,
@@ -174,16 +176,12 @@ export default {
         console.log(e)
       })
     },
-
-    resetPassword() {
-
-    },
     unlockUser() {
-      this.saveOrUpdate({ userIds: this.convertObjectsToIds(this.usersSelected), isUnLockUsers: true })
+      this.saveOrUpdate({ userIds: this.convertObjectsToIds(this.usersSelected), isUnlockUsers: true })
     },
     deleteUser() {
-      this.$store.dispatch('user/deletes', this.convertObjectsToIds(this.usersSelected)).then(data => {
-
+      this.$store.dispatch('user/deletes', this.usersSelected).then(data => {
+        this.$emit('resetListUser', null)
       })
     },
     lockUser() {

@@ -6,6 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import manageUserRouter from './modules/manage-user'
+import manageGroupRouter from './modules/manage-group'
 /* Router Modules */
 
 /**
@@ -73,7 +74,7 @@ export const constantRoutes = [
         path: 'profile',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'profile', icon: 'user' }
+        meta: { title: 'profile', icon: 'user', affix: true }
       }
     ]
   }
@@ -86,6 +87,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
   manageUserRouter,
+  manageGroupRouter,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

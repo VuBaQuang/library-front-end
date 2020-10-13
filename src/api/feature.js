@@ -1,24 +1,33 @@
 import request from '@/utils/request'
 
-export function getAll(data) {
+export function findAll(data) {
   return request({
-    url: '/groups/get-all',
+    url: '/features/get-all',
     method: 'post',
     data
   })
 }
+
+export function find(data) {
+  return request({
+    url: '/features/find',
+    method: 'post',
+    data
+  })
+}
+
 export function saveOrUpdate(data) {
   return request({
-    url: '/groups',
+    url: '/features',
     method: 'post',
     data
   })
 }
+
 export function deletes(data) {
   return request({
-    url: 'groups/deletes',
+    url: '/features/deletes',
     method: 'post',
     data
-
   })
 }

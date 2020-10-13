@@ -3,7 +3,7 @@
     <el-table
       class="table-list-version"
       :data="data"
-      style="width: 100%;border-top:1px solid #dfe6ec;"
+      style="width: 100%;border-top:1px solid #dfe6ec;min-height: calc(100vh - 250px);"
       max-height="540px"
       :row-class-name="rowClassName"
       @selection-change="handleSelectionChange"
@@ -78,17 +78,17 @@
           <i v-if="row.isLock===1" class="el-icon-unlock" style="color: green" />
         </template>
       </el-table-column>
-      <el-table-column width="100px" fixed="right" align="right">
-        <template slot-scope="{row}">
-          <el-button
-            type="info"
-            size="mini"
-            plain
-            icon="el-icon-info"
-            @click="viewInfo(row)"
-          >Xem</el-button>
-        </template>
-      </el-table-column>
+      <!--      <el-table-column width="100px" fixed="right" align="right">-->
+      <!--        <template slot-scope="{row}">-->
+      <!--          <el-button-->
+      <!--            type="info"-->
+      <!--            size="mini"-->
+      <!--            plain-->
+      <!--            icon="el-icon-info"-->
+      <!--            @click="viewInfo(row)"-->
+      <!--          >Xem</el-button>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
     </el-table>
 
   </div>

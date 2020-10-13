@@ -2,7 +2,7 @@
 
 import Layout from '@/layout'
 
-const manageVersionRouter = {
+const manageUserRouter = {
   path: '/manage-user',
   redirect: '/manage-user/list',
   component: Layout,
@@ -15,4 +15,4 @@ const manageVersionRouter = {
     }
   ]
 }
-export default manageVersionRouter
+export default manageUserRouter

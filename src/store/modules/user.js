@@ -8,10 +8,10 @@ import {
   register,
   checkExist,
   getAll,
-  saveOrUpdate
+  saveOrUpdate, deletes
 } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import { getToken, removeToken } from '@/utils/auth'
+import { resetRouter } from '@/router'
 // import axios from 'axios'
 const getDefaultState = () => {
   return {
@@ -79,8 +79,10 @@ const actions = {
         }
         var roles = []
         for (var i = 0; i < data.groups.length; i++) {
+          if (data.groups[i].roles !== null) {
+            Array.prototype.push.apply(roles, data.groups[i].roles.split(','))
+          }
           roles.push(data.groups[i].code)
-          if (data.groups[i].roles !== null) { roles.push.apply(data.groups[i].roles.split(',')) }
         }
         data.roles = roles
         commit('SET_USER', data)
@@ -195,6 +197,15 @@ const actions = {
       })
     })
   },
+  deletes({ commit, state, dispatch }, user) {
+    return new Promise((resolve, reject) => {
+      deletes(user).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
@@ -202,22 +213,8 @@ const actions = {
       removeToken()
       resolve()
     })
-  },
-
-  async changeRoles({ commit, dispatch }, role) {
-    const token = role + '-token'
-    commit('SET_TOKEN', token)
-    setToken(token)
-    const { roles } = await dispatch('getInfo')
-    resetRouter()
-    // generate accessible routes map based on roles
-    const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-    // dynamically add accessible routes
-    router.addRoutes(accessRoutes)
-
-    // reset visited views and cached views
-    dispatch('tagsView/delAllViews', null, { root: true })
   }
+
 }
 
 export default {

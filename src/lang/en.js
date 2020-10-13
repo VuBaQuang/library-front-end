@@ -1,6 +1,7 @@
 export default {
   route: {
     manage_user: 'Manage user',
+    manage_group: 'Manage group',
     dashboard: 'Dashboard',
     documentation: 'Documentation',
     guide: 'Guide',
