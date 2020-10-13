@@ -26,7 +26,11 @@
           <h2 v-if="isLogin" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
             {{ $t('login.title') }}
           </h2>
-          <h2 v-if="confirmUserEmail || confirmViaEmail" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
+          <h2
+            v-if="confirmUserEmail || confirmViaEmail"
+            style="color: #333333;font-weight: bold; font-size: 30px"
+            class="title"
+          >
             Xác nhận thông tin
           </h2>
           <h2 v-if="isChangePassword" style="color: #333333;font-weight: bold; font-size: 30px" class="title">
@@ -39,7 +43,7 @@
         <el-input
           id="code-mail"
           ref="codeMail"
-          v-model="loginForm.email"
+          v-model="loginForm.token"
           prefix-icon="el-icon-key"
           size="small"
           placeholder="Mã xác nhận nhận từ mail"
@@ -102,7 +106,15 @@
       </el-tooltip>
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item v-if="isChangePassword" prop="confirmPassword">
-          <el-input ref="confirmPassword" v-model="loginForm.confirmPassword" size="small" type="password" maxlength="200" prefix-icon="el-icon-unlock" :placeholder="$t('login.confirmPassword')" />
+          <el-input
+            ref="confirmPassword"
+            v-model="loginForm.confirmPassword"
+            size="small"
+            type="password"
+            maxlength="200"
+            prefix-icon="el-icon-unlock"
+            :placeholder="$t('login.confirmPassword')"
+          />
         </el-form-item>
       </el-tooltip>
 
@@ -249,6 +261,16 @@ export default {
         callback()
       }
     }
+    const validateConfirmPassword = (rule, value, callback) => {
+      if (value.trim().length === 0) {
+        callback(new Error(this.$t('required_confirmPassword')))
+      }
+      if ((value.trim() !== this.loginForm.password)) {
+        callback(new Error(this.$t('valid_confirmPassword')))
+      } else {
+        callback()
+      }
+    }
     return {
       isLogin: true,
       confirmUserEmail: false,
@@ -259,11 +281,15 @@ export default {
       loginForm: {
         username: '',
         password: '',
-        email: ''
+        email: '',
+        token: '',
+        name: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'change', validator: validateUsername }],
+        password: [{ required: true, trigger: 'change', validator: validatePassword }],
+        confirmPassword: [{ required: true, trigger: 'change', validator: validateConfirmPassword }]
+
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -286,7 +312,6 @@ export default {
     }
   },
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -307,14 +332,17 @@ export default {
       this.confirmViaEmail = false
     },
     toConfirmUserEmail() {
-      this.$refs['loginForm'].resetFields()
+      // this.$refs['loginForm'].resetFields()
       this.isLogin = false
       this.confirmUserEmail = true
       this.isChangePassword = false
       this.confirmViaEmail = false
     },
     toConfirmViaEmail() {
-      this.$store.dispatch('user/confirmUserEmail', { username: this.loginForm.username, email: this.loginForm.email }).then(data => {
+      this.$store.dispatch('user/confirmUserEmail', {
+        username: this.loginForm.username,
+        email: this.loginForm.email
+      }).then(data => {
         // console.log(data)
         // this.$refs['loginForm'].resetFields()
         this.isLogin = false
@@ -326,18 +354,36 @@ export default {
       })
     },
     toChangePassword() {
-      this.$refs['loginForm'].resetFields()
-      this.isLogin = false
-      this.confirmUserEmail = false
-      this.isChangePassword = true
-      this.confirmViaEmail = false
+      this.$store.dispatch('user/confirmTokenViaEmail', { token: this.loginForm.token, username: this.loginForm.username }).then(data => {
+        if (data.data.status === 'SUCCESS') {
+          this.$refs['loginForm'].resetFields()
+          this.isLogin = false
+          this.confirmUserEmail = false
+          this.isChangePassword = true
+          this.confirmViaEmail = false
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     handleCreateNewPassword() {
+      this.$store.dispatch('user/createNewPassword', { token: this.loginForm.token, username: this.loginForm.username, password: this.loginForm.password }).then(data => {
+        if (data.data.status === 'SUCCESS') {
+          this.toLogin()
+        }
+        // console.log(data)
+      }).catch(e => {
+        console.log(e)
+      })
       console.log('Tạo mật khẩu')
     },
     sendMailAgain() {
       this.counting = true
-      this.$store.dispatch('user/sendEmailAgain', { username: this.loginForm.username, email: this.loginForm.email }).then(data => {
+      this.$store.dispatch('user/sendEmailAgain', {
+        username: this.loginForm.username,
+        name: this.loginForm.name,
+        email: this.loginForm.email
+      }).then(data => {
         console.log(data)
       }).catch(e => {
         console.log(e)

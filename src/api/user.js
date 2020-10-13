@@ -41,9 +41,16 @@ export function logout(data) {
     data
   })
 }
-export function confirmMailChangePassword(data) {
+export function confirmTokenViaEmail(data) {
   return request({
-    url: '/auth/confirm-mail-reset-password',
+    url: '/auth/confirm-token-via-email',
+    method: 'POST',
+    data
+  })
+}
+export function createNewPassword(data) {
+  return request({
+    url: '/auth/create-new-password',
     method: 'POST',
     data
   })

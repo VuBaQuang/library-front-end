@@ -4,10 +4,12 @@ import {
   changePassword,
   confirmUserEmail,
   sendEmailAgain,
+  confirmTokenViaEmail,
   logout,
   register,
   checkExist,
   getAll,
+  createNewPassword,
   saveOrUpdate, deletes
 } from '@/api/user'
 import { getToken, removeToken } from '@/utils/auth'
@@ -119,7 +121,28 @@ const actions = {
         })
     })
   },
-
+  confirmTokenViaEmail({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      confirmTokenViaEmail(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  createNewPassword({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      createNewPassword(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
   confirmUserEmail({ commit, state, dispatch }, form) {
     return new Promise((resolve, reject) => {
       confirmUserEmail(form)
