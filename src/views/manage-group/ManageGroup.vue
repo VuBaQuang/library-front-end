@@ -130,7 +130,7 @@ export default {
     setRoles(roles, permissionFeatureData) {
       var result = []
       for (let i = 0; i < roles.length; i++) {
-        debugger
+        // debugger
         var feature_permission = roles[i].split('_manage_')
         if (feature_permission.length === 2) {
           var feature = feature_permission[0]

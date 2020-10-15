@@ -1,28 +1,19 @@
 
 <template>
-  <div class="d-inline-block">
-    <el-button
-      v-if="!isGroupFiltered"
-      icon="el-icon-plus"
-      class="mb-1"
-      type="primary"
-      size="small"
-      plain
-      @click="createGroup"
-    >Thêm nhóm</el-button>
-    <div v-if="isGroupFiltered " class="justify-between-align-center">
-      <div v-if="!loadingTable" class="font-sm d-inline-block mb-1" style="min-width: 200px">
-        Có {{ userTotal }} người dùng trong nhóm &nbsp;&nbsp;</div>
-      <div class="d-inline-block">
-        <div v-if="loadingTable" class="font-sm d-inline-block mb-1" style="min-width: 200px" />
+  <div>
+    <div v-if="isGroupFiltered" class="justify-between-align-center" style="position: relative">
+      <div v-if="!loadingTable" class="font-sm d-inline-block mb-1" style="min-width: 200px;font-size: 14px;position: absolute; top:0">
+        Có {{ userTotal }} người dùng trong nhóm</div>
+      <div style="min-width: 200px;margin-left: 200px">
+        <div style="min-width: 200px;" />
         <el-tag
           v-for="group in valueOfFilterByGroup"
           :key="group.id + 'filteredGroups'"
           size="small"
           type="success"
-          class="mr-1 mb-1"
+          style="margin: 0 5px 5px 0"
           closable
-          @close="addOrRemoveGroupToFilters(group)"
+          @close="removeGroupToFilters(group)"
         >
           {{ group.name }}</el-tag>
       </div>
@@ -32,15 +23,10 @@
 
 <script>
 
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
-    valueOfFilterByGroup: {
-      required: false,
-      type: Array,
-      default: function() {
-        return []
-      }
-    },
     isGroupFiltered: {
       required: false,
       type: Boolean,
@@ -58,15 +44,30 @@ export default {
     }
   },
   computed: {
-
+    ...mapGetters([
+      'valueOfFilterByGroup'
+    ])
   },
   methods: {
     createGroup() {
 
     },
-    addOrRemoveGroupToFilters(group) {
-
+    removeGroupToFilters(group) {
+      this.$emit('removeGroupToFilters', group)
     }
   }
 }
 </script>
+<style>
+.justify-between-align-center{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.font-sm {
+  font-size: 0.875rem;
+}
+.d-inline-block{
+  display: inline-block !important;
+}
+</style>

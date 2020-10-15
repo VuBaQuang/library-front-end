@@ -1,18 +1,17 @@
 <template>
   <div style="min-width: 120px;max-width: 120px; margin-left: 1em !important;" class="justify-end-align-center">
     <el-popover
-      v-model="hidePopoverFilterByGroup"
+      v-model="visiblePopover"
       trigger="click"
       width="300px"
       placement="bottom-start"
       popper-class="popover-filter-by-group"
-      @visible-change="groupSearchDropdownChange"
       @show="showPopoverFilterByGroup"
+      @hide="hidePopoverFilter"
     >
       <div slot="reference" class="mr-3" style="min-width: 135px;max-width: 135px; color: #1890ff; cursor: pointer">
         Lọc bằng nhóm<i class="el-icon-arrow-down el-icon--right" />
       </div>
-
       <el-input
         ref="groupSearchInput"
         v-model="groupSearch"
@@ -53,18 +52,31 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
-
+    hidePopoverFilterByGroup: {
+      required: false,
+      type: Boolean
+    },
+    groups: {
+      required: true,
+      type: Array
+    }
   },
   data() {
     return {
-      groups: [],
       groupSearch: '',
-      hidePopoverFilterByGroup: false,
       pageSize: 10,
       page: 1
     }
   },
   computed: {
+    visiblePopover: {
+      get() {
+        return this.hidePopoverFilterByGroup
+      },
+      set(value) {
+        return value
+      }
+    },
     ...mapGetters([
       'valueOfFilterByGroup'
     ])
@@ -73,64 +85,24 @@ export default {
 
   },
   methods: {
+    hidePopoverFilter() {
+      this.$emit('hidePopoverFilter', false)
+    },
+    getAllGroup() {
+      this.$emit('getAllGroup', this.groupSearch)
+    },
     showPopoverFilterByGroup() {
-      this.getAllGroup()
+      this.$emit('showPopoverFilterByGroup', true)
     },
     addOrRemoveGroupToFilters(group) {
-      this.loadingTable = true
-      clearTimeout(this.timeout)
-      var values = []
-      if (this.checkGroupInGroups(group, this.valueOfFilterByGroup)) {
-        values = JSON.parse(JSON.stringify(this.valueOfFilterByGroup))
-        values.splice(this.indexOfGroupInGroups(group, this.valueOfFilterByGroup), 1)
-      } else {
-        values = JSON.parse(JSON.stringify(this.valueOfFilterByGroup))
-        values.push(group)
-      }
+      this.$emit('addOrRemoveGroupToFilters', group)
+    },
 
-      this.$store.dispatch('group/setValueOfFilterByGroup', values).then(() => {
-        this.hidePopoverFilterByGroup = false
-        this.timeout = setTimeout(() => {
-          this.$emit('filterByGroup', this.valueOfFilterByGroup)
-        }, 500)
-      })
-    },
-    checkGroupInGroups(group, groups) {
-      var result = groups.filter(e =>
-        e.id === group.id
-      )
-      return result.length > 0
-    },
-    indexOfGroupInGroups(group, groups) {
-      for (var i = 0; i < groups.length; i++) {
-        if (groups[i].id === group.id) {
-          return i
-        }
-      }
-      return -1
-    },
     isThisGroupSelected(groupInput) {
       return this.valueOfFilterByGroup.findIndex(group => group.id === groupInput.id) !== -1
     },
     scrollGroupList(event) {
-      if (event.target.scrollHeight - event.target.clientHeight === event.target.scrollTop) {
-        this.pageSize = this.pageSize + 10
-        this.getAllGroup()
-      }
-    },
-    groupSearchDropdownChange(value) {
-      if (value) {
-        setTimeout(() => {
-          this.$refs.groupSearchInput.focus()
-        }, 200)
-      }
-    },
-    getAllGroup() {
-      this.$store.dispatch('group/getAll', { page: this.page, pageSize: this.pageSize }).then(data => {
-        this.groups = data.data.data.content
-      }).catch(e => {
-        console.log(e)
-      })
+      this.$emit('scrollGroupList', event)
     }
   }
 }
