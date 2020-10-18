@@ -3,8 +3,9 @@
     <el-table
       class="table-list-version"
       :data="data"
-      style="width: 100%;border-top:1px solid #dfe6ec;min-height: calc(100vh - 250px);"
+      style="width: 100%;border-top:1px solid #dfe6ec;"
       max-height="540px"
+      :row-class-name="rowClassName"
       @selection-change="handleSelectionChange"
     >
       <el-table-column
@@ -96,6 +97,11 @@ export default {
     }
   },
   methods: {
+    rowClassName({ row, rowIndex }) {
+      if (row.isLock !== 1) {
+        return 'user-is-block'
+      }
+    },
     indexMethod(index) {
       return this.startIndex + index + 1
     },

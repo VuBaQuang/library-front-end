@@ -11,7 +11,7 @@ const manageGroupRouter = {
       path: 'list',
       component: () => import('@/views/manage-group/ManageGroup'),
       name: 'ManageGroup',
-      meta: { title: 'manage_group', icon: 'peoples', roles: ['group_manage'] }
+      meta: { title: 'manage_group', icon: 'peoples', roles: ['group_manager'] }
     }
   ]
 }

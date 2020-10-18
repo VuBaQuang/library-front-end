@@ -18,7 +18,7 @@
     <el-col>
       <el-col style="" :span="24">
         <el-form ref="form" :model="form" :rules="rulesForm">
-          <el-col v-if="!usersSelected.length>0" v-permission="['admin', 'group_manage']" style="margin-top: 10px; width: 135px; margin-right: 30px">
+          <el-col v-if="!usersSelected.length>0" v-permission="['admin', 'group_manage']" style="margin-top: 10px; width: 135px; margin-right: 30px; margin-bottom: 30px">
             <filter-by-group
               :hide-popover-filter-by-group="hidePopoverFilterByGroup"
               :groups="groups"
@@ -75,8 +75,8 @@
           </el-col>
         </el-form>
       </el-col>
-      <el-col style="min-height: calc(100vh - 250px); ">
-        <el-col style="margin-top: 20px; min-height: calc(100vh - 250px);" :span="24">
+      <el-col style="">
+        <el-col style="" :span="24">
           <user-table v-loading="loadingTableUser" :data="dataUsers" @handlerSelectUser="usersSelected=$event" />
         </el-col>
         <el-col style="margin-top: 20px; margin-bottom: 30px" class="pagination-group">

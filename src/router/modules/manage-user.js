@@ -11,7 +11,7 @@ const manageUserRouter = {
       path: 'list',
       component: () => import('@/views/manage-user/ManageUser'),
       name: 'ManageUser',
-      meta: { title: 'manage_user', icon: 'user', roles: ['user_manage'], noCache: true }
+      meta: { title: 'manage_user', icon: 'user', roles: ['user_manager'], noCache: true }
     }
   ]
 }
