@@ -75,8 +75,8 @@
           </el-col>
         </el-form>
       </el-col>
-      <el-col style="">
-        <el-col style="" :span="24">
+      <el-col>
+        <el-col style="margin-top: 20px">
           <user-table v-loading="loadingTableUser" :data="dataUsers" @handlerSelectUser="usersSelected=$event" />
         </el-col>
         <el-col style="margin-top: 20px; margin-bottom: 30px" class="pagination-group">

@@ -8,7 +8,7 @@
         <div class="justify-end-align-center">
           <el-popover
             v-model="hidePopoverGroup"
-            v-permission="['admin', 'group_manage']"
+            v-permission="['admin', 'group_manager']"
             trigger="click"
             width="300px"
             placement="right-start"

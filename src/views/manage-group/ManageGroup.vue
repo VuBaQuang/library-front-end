@@ -102,6 +102,7 @@ export default {
       this.groupIsWorking.roles = this.getRoles(this.permissionFeatureData).toString().replaceAll('[', '').replaceAll(']', '')
       this.$store.dispatch('group/saveOrUpdate', this.groupIsWorking).then(data => {
         this.resetGroup()
+        this.dialogChangePermissionVisible = false
       }).catch(e => {
         console.log(e)
         this.loadingBt = false

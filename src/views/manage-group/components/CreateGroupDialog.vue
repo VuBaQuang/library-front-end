@@ -19,7 +19,6 @@
           <el-input ref="name" v-model="form.name" maxlength="100" @keyup.enter.native="handleCreate" />
         </el-form-item>
       </el-form>
-      <p>Ví dụ: Conference Lead, Influencer, or Donnor</p>
       <span slot="footer" class="dialog-footer">
 
         <el-divider class="my-1" />

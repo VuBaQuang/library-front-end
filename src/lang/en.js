@@ -2,6 +2,8 @@ export default {
   route: {
     manage_user: 'Manage user',
     manage_group: 'Manage group',
+    manage_book: 'Manage book',
+    borrow_book: 'Borrow book ',
     dashboard: 'Dashboard',
     documentation: 'Documentation',
     guide: 'Guide',
