@@ -172,8 +172,9 @@ export default {
         this.$store.dispatch('permission-store/findAll', body).then(permissions => {
           this.permissionFeatureData = JSON.parse(JSON.stringify(this.getRolesByPermissionsFeatures(features, permissions)))
           this.tempPermissionFeatureData = JSON.parse(JSON.stringify(this.permissionFeatureData))
-          this.permissionFeatureData = this.setRoles(this.groupIsWorking.roles.split(','), this.permissionFeatureData)
-          console.log(this.permissionFeatureData)
+          if (this.groupIsWorking.roles !== null) {
+            this.permissionFeatureData = this.setRoles(this.groupIsWorking.roles.split(','), this.permissionFeatureData)
+          }
         }).catch(e => {
           console.log(e)
         })

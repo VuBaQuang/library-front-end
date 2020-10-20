@@ -128,3 +128,15 @@
     padding-left: 10px;
   }
 }
+.avatarDiv {
+  margin-right: 1rem;
+  min-height: 60px;
+  max-height: 60px;
+  min-width: 60px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 50%;
+}

@@ -18,7 +18,7 @@
     <el-col>
       <el-col style="" :span="24">
         <el-form ref="form" :model="form" :rules="rulesForm">
-          <el-col v-if="!usersSelected.length>0" v-permission="['admin', 'group_manage']" style="margin-top: 10px; width: 135px; margin-right: 30px; margin-bottom: 30px">
+          <el-col v-if="!usersSelected.length>0" v-permission="['admin', 'group_manager']" style="margin-top: 10px; width: 135px; margin-right: 30px;">
             <filter-by-group
               :hide-popover-filter-by-group="hidePopoverFilterByGroup"
               :groups="groups"
@@ -99,6 +99,7 @@
 
 <script>
 import permission from '@/directive/permission/index.js'
+// import checkPermission from '@/utils/permission'
 import UserTable from '@/views/manage-user/components/UserTable'
 import ActionUserTable from '@/views/manage-user/components/ActionUserTable'
 import FilterByGroup from '@/views/manage-user/components/FilterByGroup'
@@ -158,7 +159,6 @@ export default {
   created() {
     this.getAllUser()
   },
-
   methods: {
     showPopoverFilterByGroup() {
       this.getAllGroup()

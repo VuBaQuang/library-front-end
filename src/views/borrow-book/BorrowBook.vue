@@ -1,37 +1,67 @@
 <template>
-  <div style="width: 95%;margin: 0px auto;">
-    <div v-loading="loadSearchEmployee" element-loading-text="Đang tìm kiếm người dùng" style="min-height: calc(100vh - 250px); ">
-      <div v-if="empList && empList.length > 0" style="max-height: 580px; overflow-y: auto; overflow-x: hidden;">
-        <div v-for="(emp, index) in empList" :key="index">
+  <div style="width: 95%;margin: 0 auto;">
+    <h2 class="text-center">Tìm kiếm sách</h2>
+    <div style="margin-bottom: 50px">
+      <el-form
+        ref="empSearchForm"
+        :model="form"
+        :rules="rules"
+        style="margin: 1rem auto;width: 70%;"
+        @submit.native.prevent="handleSearch"
+      >
+        <el-form-item prop="searchText">
+
+          <el-input
+            ref="textSearch"
+            v-model="form.searchText"
+            maxlength="100"
+            placeholder="Nhập tên hoặc mã sách hoặc học kỳ"
+          >
+            <i v-if="form.searchText.length>0" slot="suffix" class="el-icon-circle-close" @click="clearSearch" />
+            <el-button
+              slot="append"
+              type="info"
+              icon="el-icon-search"
+              size="small"
+              plain
+              @click="handleSearch"
+            />
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div v-loading="loadSearch" element-loading-text="Đang tìm kiếm sách" style="min-height: calc(100vh - 250px); ">
+      <div v-if="books && books.length > 0" style="max-height: 580px; overflow-y: auto; overflow-x: hidden;">
+        <div v-for="(book, index) in books" :key="index + book">
           <el-row :gutter="10" class="small-font-size" style="display: flex;align-items: center;">
             <el-col :span="21">
               <div flex="right" class="justify-between-align-center" style="padding: 0 10px">
                 <div style="display: flex;justify-content: space-between;max-width: 300px;">
                   <div
                     class="box-center avatarDiv"
-                    :style="{backgroundImage: `url(${emp.avatar || defaultAvatar})`}"
+                    :style="{backgroundImage: `url(${urlImage})`}"
                   />
                   <div class="content break-word font-sm" style="min-width: 250px">
-                    <div>{{ emp.fullName }}</div>
-                    <div class="">{{ emp.employeeCode }}</div>
-                    <div class="">{{ emp.email }}</div>
+                    <div>{{ book.name }}</div>
+                    <div class="">{{ book.code }}</div>
+                    <div class="">Số lượng: {{ book.count }}</div>
                   </div>
-                  <el-row :gutter="30" style="min-width: 200px">
-                    <el-col v-for="(group, i) in emp.groups" :key="group+i" style="margin-bottom: 10px" :span="8"><el-tag type="success">{{ group }}</el-tag></el-col>
-                  </el-row>
+                  <!--                  <el-row :gutter="30" style="min-width: 200px">-->
+                  <!--                    <el-col v-for="(group, i) in emp.groups" :key="group+i" style="margin-bottom: 10px" :span="8"><el-tag type="success">{{ group }}</el-tag></el-col>-->
+                  <!--                  </el-row>-->
                 </div>
 
               </div>
             </el-col>
             <el-col style="margin-right: 20px" :span="3" align="right">
-              <el-button icon="el-icon-info" size="small" round plain @click="watchEmpInfo(emp)">Xem hồ sơ</el-button>
+              <el-button icon="el-icon-info" size="small" round plain @click="borrow(book)">Mượn sách</el-button>
             </el-col>
           </el-row>
           <el-divider class="my-2" />
         </div>
       </div>
-      <div v-if="!(empList && empList.length > 0)">
-        <p class="color-info text-center">Không có dữ liệu người dùng</p>
+      <div v-if="!(books && books.length > 0)">
+        <p class="color-info text-center">Không có dữ liệu sách</p>
       </div>
     </div>
 
@@ -42,42 +72,33 @@
 export default {
   data() {
     return {
-
+      form: {
+        searchText: ''
+      },
+      books: [],
+      booksTotal: 0,
+      loadSearch: false,
+      urlImage: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80'
     }
   },
 
   created() {
-
+    this.fetchBooks()
   },
   methods: {
-
-    handleSearch() {
-      this.$refs['empSearchForm'].validate((valid) => {
-        if (valid) {
-          this.searchEmp()
-          this.$router.push({ path: this.$route.path, query: { search: this.empSearchForm.searchText }})
-        } else {
-          this.isSubmitted = false
-          return
-        }
-      }
-      )
-    },
-    searchEmp() {
-      this.loadSearchEmployee = true
-      var listPhone = []
-      listPhone.push(this.empSearchForm.searchText)
-      var body = { fullName: this.empSearchForm.searchText, email: this.empSearchForm.searchText, phone: listPhone }
-      this.$store.dispatch('employee/findAll', body).then(data => {
+    fetchBooks() {
+      this.loadSearch = true
+      this.tableData = []
+      var body = { page: this.page, pageSize: this.size }
+      this.$store.dispatch('book/getAll', body).then(data => {
         setTimeout(() => {
-          this.empList = data.data.items
-          this.loadSearchEmployee = false
+          this.loadSearch = false
+          this.books = data.data.data.content
+          this.booksTotal = data.data.data.totalElements
         }, 1000)
+      }).catch(e => {
+        console.log(e)
       })
-    },
-    watchEmpInfo(emp) {
-      console.log(emp)
-      this.$router.push({ path: '/manage-user/detail/' + emp.id })
     }
   }
 }

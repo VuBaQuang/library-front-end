@@ -6,7 +6,6 @@
       title="Thay đổi quyền"
       :visible.sync="visibleDialog"
       @close="handleCancel"
-      @open="open"
     >
       <el-dialog
         width="30%"
@@ -19,7 +18,47 @@
         <div style="width: 100%; text-align: center; padding-bottom: 50px"><span>Đang cập nhật quyền cho người dùng</span></div>
 
       </el-dialog>
-      <table-permissions :table-data="dataTable" />
+      <el-dialog
+        width="30%"
+        title="Thêm tính năng"
+        :visible.sync="visibleCreateFeatureDialog"
+        append-to-body
+      >
+
+        <el-form ref="form" :model="form" :rules="rules" @submit.native.prevent>
+          <el-form-item prop="name" label="Tên">
+            <el-input ref="name" v-model="form.name" maxlength="100" />
+          </el-form-item>
+          <el-form-item prop="code" label="Mã">
+            <el-input ref="code" v-model="form.code" maxlength="100" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" size="small" @click="handleSaveFeature">Lưu</el-button>
+          <el-button class="button_text" type="text" size="small" @click="handleCancelFeature">Hủy</el-button>
+        </span>
+      </el-dialog>
+      <el-col style="margin-bottom: 20px">
+        <el-button
+          plain
+          type="primary"
+          size="small"
+          style="margin-right: 20px"
+          icon="el-icon-circle-plus-outline"
+          @click="createFeature()"
+        >Thêm tính năng
+        </el-button>
+        <el-button
+          plain
+          type="success"
+          size="small"
+          icon="el-icon-circle-plus-outline"
+          @click="createPermission()"
+        >Thêm quyền
+        </el-button>
+      </el-col>
+      <el-col style="margin-bottom: 30px"><table-permissions :table-data="dataTable" /></el-col>
+
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" size="small" @click="handleSave">Lưu</el-button>
         <el-button class="button_text" type="text" size="small" @click="handleCancel">Hủy</el-button>
@@ -50,7 +89,28 @@ export default {
     }
   },
   data() {
+    const validateName = (rule, value, callback) => {
+      var regex = new RegExp('^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưạả ấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốýồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$')
+      if (!regex.test(value.trim())) {
+        callback(new Error('Chỉ sử dụng kí tự a-z, A-Z, 0-9, tiếng Việt có dấu.'))
+      } else {
+        callback()
+      }
+    }
     return {
+      visibleCreateFeatureDialog: false,
+      form: {
+        name: '',
+        code: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: 'Bạn chưa nhập tên', trigger: 'change' },
+          { validator: validateName, trigger: 'change' }],
+        code: [
+          { required: true, message: 'Bạn chưa nhập mã', trigger: 'change' },
+          { validator: validateName, trigger: 'change' }]
+      }
     }
   },
   computed: {
@@ -79,8 +139,16 @@ export default {
   },
 
   methods: {
+    handleSaveFeature() {
 
-    open() {
+    },
+    handleCancelFeature() {
+
+    },
+    createFeature() {
+      this.visibleCreateFeatureDialog = true
+    },
+    createPermission() {
 
     },
     handleSave() {
