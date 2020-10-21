@@ -5,6 +5,7 @@
     <el-col><hr></el-col>
     <el-col>
       <el-button
+        v-permission="['group_manage_edit']"
         class="button-add-group"
         type="primary"
         size="small"
@@ -57,8 +58,10 @@ import RenameGroupDialog from '@/views/manage-group/components/RenameGroupDialog
 import DeleteGroupDialog from '@/views/manage-group/components/DeleteGroupDialog'
 import CreateGroupDialog from '@/views/manage-group/components/CreateGroupDialog'
 import GroupPermissionChangingDialog from '@/views/manage-group/components/GroupPermissionChangingDialog'
+import permission from '@/directive/permission/permission'
 export default {
   name: 'ManageGroup',
+  directives: { permission },
   components: { CreateGroupDialog, DeleteGroupDialog, RenameGroupDialog, GroupTable,
     GroupPermissionChangingDialog
     // ,

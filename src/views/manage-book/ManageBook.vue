@@ -16,6 +16,7 @@
     <el-col v-if="!bookIsSelected.length>0" align="left" :span="4"><p /></el-col>
     <el-col :span="20">
       <el-button
+        v-permission="['book_manage_edit']"
         class="button-add-group"
         type="primary"
         size="small"
@@ -50,8 +51,11 @@
 <script>
 import CreateBookDialog from '@/views/manage-book/components/CreateBookDialog'
 import BookTable from '@/views/manage-book/components/BookTable'
+import permission from '@/directive/permission/permission'
+
 export default {
   name: 'ManageGroup',
+  directives: { permission },
   components: {
     BookTable, CreateBookDialog
     // SendVersionDialog

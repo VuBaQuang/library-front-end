@@ -56,6 +56,7 @@
       <el-table-column align="right">
         <template slot-scope="{row}">
           <el-button
+            v-permission="['group_manage_edit']"
             type="info"
             size="mini"
             plain
@@ -91,9 +92,11 @@
   </div>
 
 </template>
-
 <script>
+import permission from '@/directive/permission/permission'
+
 export default {
+  directives: { permission },
   props: {
     groupsSelected: {
       type: Array,

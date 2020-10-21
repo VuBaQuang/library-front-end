@@ -1,10 +1,10 @@
 <template>
   <el-form>
     <el-form-item label="Name">
-      <el-input v-model.trim="user.name" />
+      <el-input v-model="user.name" />
     </el-form-item>
     <el-form-item label="Email">
-      <el-input v-model.trim="user.email" />
+      <el-input v-model="user.email" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit">Update</el-button>
@@ -25,6 +25,10 @@ export default {
   },
   methods: {
     submit() {
+      this.user.isUpdateInfo = true
+      this.$store.dispatch('user/saveOrUpdate', this.user).then(data => {
+        console.log(data)
+      })
       this.$message({
         message: 'User information has been updated successfully',
         type: 'success',

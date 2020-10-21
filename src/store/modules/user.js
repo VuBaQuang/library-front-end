@@ -10,7 +10,7 @@ import {
   checkExist,
   getAll,
   createNewPassword,
-  saveOrUpdate, deletes, borrowBook
+  saveOrUpdate, deletes, borrowBook, returnBook, updateBorrowBook
 } from '@/api/user'
 import { getToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
@@ -146,6 +146,28 @@ const actions = {
   borrowBook({ commit, state, dispatch }, form) {
     return new Promise((resolve, reject) => {
       borrowBook(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  returnBook({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      returnBook(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  updateBorrowBook({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      updateBorrowBook(form)
         .then(function(response) {
           resolve(response)
         })

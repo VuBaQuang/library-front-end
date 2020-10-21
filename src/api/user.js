@@ -83,6 +83,20 @@ export function borrowBook(data) {
     data
   })
 }
+export function returnBook(data) {
+  return request({
+    url: '/users/return-book',
+    method: 'post',
+    data
+  })
+}
+export function updateBorrowBook(data) {
+  return request({
+    url: '/users/update-borrow-book',
+    method: 'post',
+    data
+  })
+}
 export function saveOrUpdate(data) {
   return request({
     url: '/users',

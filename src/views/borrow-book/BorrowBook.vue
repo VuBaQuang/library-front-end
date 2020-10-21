@@ -5,7 +5,6 @@
       <el-form
         ref="empSearchForm"
         :model="form"
-        :rules="rules"
         style="margin: 1rem auto;width: 70%;"
         @submit.native.prevent="handleSearch"
       >
@@ -92,6 +91,12 @@ export default {
     this.fetchBooks()
   },
   methods: {
+    clearSearch() {
+      this.form.searchText = ''
+    },
+    handleSearch() {
+      this.fetchBooks()
+    },
     borrow(book) {
       if (book.count <= 0) {
         this.$message.error('Số lượng sách đã hết, vui lòng mượn lại sau')
@@ -115,7 +120,7 @@ export default {
     fetchBooks() {
       this.loadSearch = true
       this.tableData = []
-      var body = { page: this.page, pageSize: this.size }
+      var body = { page: this.page, pageSize: this.size, valueSearchBook: this.form.searchText }
       this.$store.dispatch('book/getAll', body).then(data => {
         setTimeout(() => {
           this.loadSearch = false
