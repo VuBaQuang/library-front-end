@@ -5,7 +5,7 @@
       v-if="tableData.length>0"
       v-loading="loadingTablePermission"
       :data="tableData"
-      style="width: 100%"
+      style="width: 100%;border-top:1px solid #dfe6ec;"
       max-height="300px"
       class="permission-table"
     >
@@ -22,7 +22,10 @@
           <span style="text-decoration: underline">Quyền</span>
         </template>
         <template slot-scope="{row}">
-          <el-checkbox v-for="(item, index) in row.roles" :key="item + index" v-model="item.value">{{ item.label }}</el-checkbox>
+          <el-col v-for="(item, index) in row.roles" :key="item + index" :span="8">
+            <el-checkbox v-model="item.value">{{ item.label }}</el-checkbox>
+          </el-col>
+
         </template>
       </el-table-column>
     </el-table>

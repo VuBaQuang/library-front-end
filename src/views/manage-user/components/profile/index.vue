@@ -13,8 +13,8 @@
               <el-tab-pane label="Activity" name="activity">
                 <activity />
               </el-tab-pane>
-              <el-tab-pane label="Sách đã mượn" name="borrow-book">
-                <borrow-book />
+              <el-tab-pane label="Timeline" name="timeline">
+                <timeline />
               </el-tab-pane>
               <el-tab-pane label="Account" name="account">
                 <account :user="user" />
@@ -30,39 +30,34 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import BorrowBook from '@/views/profile/components/BorrowBook'
+// import { mapGetters } from 'vuex'
 import UserCard from './components/UserCard'
 import Activity from './components/Activity'
+import Timeline from './components/Timeline'
 import Account from './components/Account'
 import ChangePassword from '@/views/profile/components/ChangePassword'
 export default {
   name: 'Profile',
-  components: { BorrowBook, ChangePassword, UserCard, Activity, Account },
+  components: { ChangePassword, UserCard, Activity, Timeline, Account },
   data() {
     return {
       dialogChangePasswordVisible: false,
-      // user: {},
+      user: {},
       activeTab: 'activity'
     }
-  },
-  computed: {
-    ...mapGetters([
-      'user'
-    ])
   },
   created() {
     // this.getUser()
   },
   methods: {
-    // getUser() {
-    //   this.user = {
-    //     name: this.name,
-    //     role: this.roles.join(' | '),
-    //     email: 'at130444@actvn.edu.vn',
-    //     avatar: this.avatar
-    //   }
-    // }
+    getUser() {
+      this.user = {
+        name: this.name,
+        role: this.roles.join(' | '),
+        email: 'at130444@actvn.edu.vn',
+        avatar: this.avatar
+      }
+    }
   }
 }
 </script>

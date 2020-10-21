@@ -46,7 +46,7 @@
     <delete-group-dialog :groups-selected="groupsSelected" :dialog-delete-visible="dialogDeleteVisible" @resetGroup="resetGroup" @handleCancelDelete="dialogDeleteVisible=$event" />
     <create-group-dialog :dialog-create-visible="dialogCreateVisible" @resetGroup="resetGroup" @handleCancel="dialogCreateVisible=$event" />
     <delete-group-dialog :groups-selected="groupsOneSelect" :dialog-delete-visible="dialogDeleteOneVisible" @resetGroup="resetGroup" @handleCancelDelete="dialogDeleteOneVisible=$event" />
-    <group-permission-changing-dialog :dialog-loading-visible="dialogLoadingVisible" :data-table="permissionFeatureData" :dialog-change-permission-visible="dialogChangePermissionVisible" @handleSave="handleSaveChangingPermission" @handleCancel="handleCancelGroupPermissionChangingDialog" />
+    <group-permission-changing-dialog :dialog-loading-visible="dialogLoadingVisible" :data-table="permissionFeatureData" :dialog-change-permission-visible="dialogChangePermissionVisible" @handleSave="handleSaveChangingPermission" @resetRoles="resetRoles" @handleCancel="handleCancelGroupPermissionChangingDialog" />
 
   </div>
 </template>
@@ -98,6 +98,9 @@ export default {
     this.fetchGroups()
   },
   methods: {
+    resetRoles() {
+      this.authorize(this.groupIsWorking)
+    },
     handleSaveChangingPermission() {
       this.groupIsWorking.roles = this.getRoles(this.permissionFeatureData).toString().replaceAll('[', '').replaceAll(']', '')
       this.$store.dispatch('group/saveOrUpdate', this.groupIsWorking).then(data => {

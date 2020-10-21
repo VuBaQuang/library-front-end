@@ -10,7 +10,7 @@ import {
   checkExist,
   getAll,
   createNewPassword,
-  saveOrUpdate, deletes
+  saveOrUpdate, deletes, borrowBook
 } from '@/api/user'
 import { getToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
@@ -135,6 +135,17 @@ const actions = {
   createNewPassword({ commit, state, dispatch }, form) {
     return new Promise((resolve, reject) => {
       createNewPassword(form)
+        .then(function(response) {
+          resolve(response)
+        })
+        .catch(function(error) {
+          reject(error)
+        })
+    })
+  },
+  borrowBook({ commit, state, dispatch }, form) {
+    return new Promise((resolve, reject) => {
+      borrowBook(form)
         .then(function(response) {
           resolve(response)
         })

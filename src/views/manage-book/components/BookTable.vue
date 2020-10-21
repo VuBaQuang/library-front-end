@@ -32,7 +32,13 @@
       <el-table-column
         width="200px"
         prop="count"
-        label="Số lượng"
+        label="Số lượng còn lại"
+        align="center"
+      />
+      <el-table-column
+        width="200px"
+        prop="borrowed"
+        label="Số lượng đã mượn"
         align="center"
       />
       <el-table-column

@@ -20,11 +20,11 @@
       </el-dialog>
       <el-dialog
         width="30%"
-        title="Thêm tính năng"
-        :visible.sync="visibleCreateFeatureDialog"
+        :title="visibleCreateFeatureDialog ? 'Thêm tính năng' : 'Thêm quyền'"
+        :visible.sync="visibleDialogChild"
         append-to-body
+        @close="closeChild"
       >
-
         <el-form ref="form" :model="form" :rules="rules" @submit.native.prevent>
           <el-form-item prop="name" label="Tên">
             <el-input ref="name" v-model="form.name" maxlength="100" />
@@ -34,8 +34,8 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" @click="handleSaveFeature">Lưu</el-button>
-          <el-button class="button_text" type="text" size="small" @click="handleCancelFeature">Hủy</el-button>
+          <el-button type="primary" size="small" @click="handleSaveFeaturePermission">Lưu</el-button>
+          <el-button class="button_text" type="text" size="small" @click="handleCancelFeaturePermission">Hủy</el-button>
         </span>
       </el-dialog>
       <el-col style="margin-bottom: 20px">
@@ -99,6 +99,7 @@ export default {
     }
     return {
       visibleCreateFeatureDialog: false,
+      visibleCreatePermissionDialog: false,
       form: {
         name: '',
         code: ''
@@ -122,6 +123,14 @@ export default {
         return value
       }
     },
+    visibleDialogChild: {
+      get() {
+        return this.visibleCreateFeatureDialog || this.visibleCreatePermissionDialog
+      },
+      set(value) {
+        return value
+      }
+    },
     visibleLoadingDialog: {
       get() {
         return this.dialogLoadingVisible
@@ -139,17 +148,36 @@ export default {
   },
 
   methods: {
-    handleSaveFeature() {
-
+    closeChild() {
+      this.visibleCreateFeatureDialog = false
+      this.visibleCreatePermissionDialog = false
     },
-    handleCancelFeature() {
+    handleSaveFeaturePermission() {
+      if (this.visibleCreateFeatureDialog) {
+        this.$store.dispatch('feature/saveOrUpdate', this.form).then(data => {
+          this.visibleCreateFeatureDialog = false
+          this.visibleCreatePermissionDialog = false
+          this.$emit('resetRoles', true)
+        })
+      }
+      if (this.visibleCreatePermissionDialog) {
+        this.$store.dispatch('permission-store/saveOrUpdate', this.form).then(data => {
+          this.visibleCreateFeatureDialog = false
+          this.visibleCreatePermissionDialog = false
+          this.$emit('resetRoles', true)
+        })
+      }
+    },
+    handleCancelFeaturePermission() {
 
     },
     createFeature() {
       this.visibleCreateFeatureDialog = true
+      this.visibleCreatePermissionDialog = false
     },
     createPermission() {
-
+      this.visibleCreateFeatureDialog = false
+      this.visibleCreatePermissionDialog = true
     },
     handleSave() {
       this.$emit('handleSave', false)

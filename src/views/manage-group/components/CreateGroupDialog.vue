@@ -9,14 +9,23 @@
       @close="handleCancel"
       @open="open"
     >
-
-      <div style="margin-bottom: 10px">
-        <span style="font-weight: bold">Tên nhóm</span>
-        <span style="float: right">{{ form.name.length }}/100</span>
-      </div>
       <el-form ref="form" :model="form" :rules="rules" @submit.native.prevent>
+        <div style="margin-bottom: 10px">
+          <span style="font-weight: bold">Tên nhóm</span>
+          <span style="float: right">{{ form.name.length }}/100</span>
+        </div>
+
         <el-form-item prop="name">
           <el-input ref="name" v-model="form.name" maxlength="100" @keyup.enter.native="handleCreate" />
+        </el-form-item>
+
+        <div style="margin-bottom: 10px">
+          <span style="font-weight: bold">Mã nhóm</span>
+          <span style="float: right">{{ form.code.length }}/100</span>
+        </div>
+
+        <el-form-item prop="code">
+          <el-input ref="code" v-model="form.code" maxlength="100" @keyup.enter.native="handleCreate" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -54,11 +63,15 @@ export default {
     return {
       loadingBt: false,
       form: {
-        name: ''
+        name: '',
+        code: ''
       },
       rules: {
         name: [
           { required: true, message: 'Bạn chưa nhập tên', trigger: 'change' },
+          { validator: validateName, trigger: 'change' }],
+        code: [
+          { required: true, message: 'Bạn chưa nhập mã', trigger: 'change' },
           { validator: validateName, trigger: 'change' }]
       },
       applicationId: null
@@ -90,13 +103,14 @@ export default {
     },
     handleCreate() {
       this.form.name = this.form.name.trim()
+      this.form.code = this.form.code.trim()
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.loadingBt) {
             return
           }
           this.loadingBt = true
-          this.$store.dispatch('group/saveOrUpdate', { name: this.form.name }).then(data => {
+          this.$store.dispatch('group/saveOrUpdate', this.form).then(data => {
             this.$message.success('Thêm nhóm thành công')
             this.handleCancel()
             this.$emit('resetGroup', '')

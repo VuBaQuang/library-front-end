@@ -76,6 +76,13 @@ export function getAll(data) {
     data
   })
 }
+export function borrowBook(data) {
+  return request({
+    url: '/users/borrow-book',
+    method: 'post',
+    data
+  })
+}
 export function saveOrUpdate(data) {
   return request({
     url: '/users',
