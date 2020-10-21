@@ -79,6 +79,7 @@
                 @click.native="handleChangeName(row)"
               ><p style="margin:  0;padding: 0; padding-left: 10px;"> Đổi tên </p></el-button>
               <el-button
+                v-permission="['group_manage_delete']"
                 class="dropdown-m"
                 style="padding: 5px 0; width: 100%;text-align: left;  margin: 0; border: unset"
                 @click.native="handlerDelete(row)"

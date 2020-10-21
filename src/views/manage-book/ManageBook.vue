@@ -5,6 +5,7 @@
     <el-col><hr></el-col>
     <el-col v-if="bookIsSelected.length>0" :span="4">
       <el-button
+        v-permission="['book_manage_delete']"
         style="float: left"
         type="danger"
         size="small"
