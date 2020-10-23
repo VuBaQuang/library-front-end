@@ -24,15 +24,15 @@
               @click="isAddOrOutGroup=!isAddOrOutGroup"
             ><p style="margin:  0;padding: 0; padding-left: 10px;">Thêm hoặc rời nhóm</p></el-button>
 
-            <el-input
-              ref="groupSearchInput"
-              v-model="groupSearch"
-              clearable
-              prefix-icon="el-icon-search"
-              :placeholder="'Tìm nhóm'"
-              size="small"
-              @input="actionSearchGroup"
-            />
+            <!--            <el-input-->
+            <!--              ref="groupSearchInput"-->
+            <!--              v-model="groupSearch"-->
+            <!--              clearable-->
+            <!--              prefix-icon="el-icon-search"-->
+            <!--              :placeholder="'Tìm nhóm'"-->
+            <!--              size="small"-->
+            <!--              @input="actionSearchGroup"-->
+            <!--            />-->
             <!--            <label v-if="!(groups ==null || groups.length === 0)" style="margin-top: 10px" class="">Chọn nhóm:</label>-->
             <el-col align="center">
               <label

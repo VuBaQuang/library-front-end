@@ -12,16 +12,16 @@
       <div slot="reference" class="mr-3" style="min-width: 135px;max-width: 135px; color: #1890ff; cursor: pointer">
         Lọc bằng nhóm<i class="el-icon-arrow-down el-icon--right" />
       </div>
-      <el-input
-        ref="groupSearchInput"
-        v-model="groupSearch"
-        clearable
-        prefix-icon="el-icon-search"
-        :placeholder="'Tìm nhóm'"
-        size="small"
-        style="margin-bottom: 20px;"
-        @input="getAllGroup"
-      />
+      <!--      <el-input-->
+      <!--        ref="groupSearchInput"-->
+      <!--        v-model="groupSearch"-->
+      <!--        clearable-->
+      <!--        prefix-icon="el-icon-search"-->
+      <!--        :placeholder="'Tìm nhóm'"-->
+      <!--        size="small"-->
+      <!--        style="margin-bottom: 20px;"-->
+      <!--        @input="getAllGroup"-->
+      <!--      />-->
       <label v-if="!(groups ==null || groups.length === 0)" style="margin-top: 10px" class="">Chọn nhóm:</label>
       <el-col align="center">
         <label
